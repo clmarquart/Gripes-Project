@@ -1,0 +1,8 @@
+<div class='fieldRow'>
+	<div class='fieldLabel'>
+		<label for='MODEL.LABEL'>LABEL</label>
+	</div>
+	<div class='fieldInput'>
+		INPUT
+	</div>
+</div>

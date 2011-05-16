@@ -1,0 +1,77 @@
+apply {
+	plugin 'java'
+	plugin 'groovy'
+}
+
+sourceCompatibility = 1.6
+
+logger.quiet "Building the Gripes Plugin"
+
+group = 'gripes'
+archivesBaseName = 'gripes-plugin'
+version = '0.1.4'
+libsDirName = "libs/${group}/${archivesBaseName}/${version}"
+
+repositories {
+    mavenCentral()
+    mavenRepo urls: "http://www.gripes-project.org/libs"
+}
+
+sourceSets {
+	main {
+	    java { srcDir 'src/main/java' }
+		groovy { srcDir 'src/main/groovy' }
+	    resources { srcDir 'src/main/resources' }
+	}	
+}
+
+dependencies {	
+	//** Gradle API
+	compile gradleApi()
+	
+	//** Groovy
+	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'
+	
+	//** Jetty
+	compile group: 'org.mortbay.jetty', name: 'jetty', version: '6.1.26'
+	
+	//** Servlet
+	compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+
+	//** Framework
+	compile group: 'net.sourceforge.stripes', name: 'stripes', version: '1.5.6'
+	
+	//** Database
+	compile group: 'org.hsqldb', 		name: 'hsqldb', 		version: '2.0.0'
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '3.3.2.GA'
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.4.0.GA'
+	compile group: 'org.hibernate', name: 'hibernate-annotations', version: '3.4.0.GA'
+	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '3.3.2.GA'
+	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
+	
+	compile name: 'stripersist', version: '1.0.3'
+	compile group: 'gripes', name:'gripes-web', version: '0.1.4'
+	
+	archives group: 'org.hsqldb', 		name: 'hsqldb', 		version: '2.0.0'
+	archives group: 'org.hibernate', name: 'hibernate-core', version: '3.3.2.GA'
+	archives group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.4.0.GA'
+	archives group: 'org.hibernate', name: 'hibernate-annotations', version: '3.4.0.GA'
+	archives group: 'org.hibernate', name: 'hibernate-c3p0', version: '3.3.2.GA'
+	archives group: 'javax.persistence', name: 'persistence-api', version: '1.0'
+	
+	archives group: 'gripes', name:'gripes-web', version: '0.1.4'
+}
+
+uploadArchives {
+    repositories {
+       flatDir(dirs: file('repos'))
+    }
+}
+uploadArchives.doLast {
+	ant {
+		copy(todir:buildDir.canonicalPath+"/"+libsDirName) {
+	    	fileset(dir:buildDir.canonicalPath, includes:"ivy.xml")
+		}
+		delete(file: buildDir.canonicalPath+"/ivy.xml")
+    }
+}

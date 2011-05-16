@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+ <!--   
+	<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+ -->
+ <description>TagLib for Gripes Applications</description>
+ <display-name>Gripes TagLib</display-name>
+ <tlib-version>1.0</tlib-version>
+ <short-name>gripes</short-name>
+ <uri>http://www.gripes-project.org/taglibs/gripestag</uri>
+ <tag>
+  <name>groovy</name>
+  <tag-class>net.sf.gripes.tags.GroovyTag</tag-class>
+  <body-content>JSP</body-content>
+  <attribute>
+   <name>klass</name>
+   <required>false</required>
+   <rtexprvalue>true</rtexprvalue>
+  </attribute>
+  <attribute>
+   <name>method</name>
+   <required>false</required>
+   <rtexprvalue>true</rtexprvalue>
+  </attribute>
+  <attribute>
+   <name>attrs</name>
+   <required>false</required>
+   <rtexprvalue>true</rtexprvalue>
+  </attribute>
+ </tag>
+</taglib>

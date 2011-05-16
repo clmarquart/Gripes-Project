@@ -1,0 +1,32 @@
+apply plugin: 'groovy'
+apply plugin: GripesPlugin
+
+buildscript {
+    repositories {
+		mavenCentral()
+	    mavenRepo urls: "http://www.gripes-project.org/libs"
+		
+		/*
+		add(new org.apache.ivy.plugins.resolver.FileSystemResolver()) {
+	        name = 'repo'
+	        addIvyPattern "/Users/cody/Development/workspaces/mate/gripes-plugin/build/ivy.xml"
+	        addArtifactPattern "/Users/cody/Development/workspaces/mate/gripes-plugin/build/libs/[organisation]/[module]/[revision]/[module]-[revision].[ext]"
+	        descriptor = 'optional'
+	        checkmodified = true
+	    }
+	    add(new org.apache.ivy.plugins.resolver.URLResolver()) { 
+	        name = 'gripes-repo' 
+	        addIvyPattern "http://www.gripes-project.org/libs/[organisation]/[module]/[revision]/ivy-[revision].xml"
+			addArtifactPattern "http://www.gripes-project.org/libs/[organisation]/[module]/[revision]/[module]-[revision].[ext]"
+	        descriptor = 'optional'
+	        checkmodified = true
+		}	
+		*/
+    }
+    dependencies {
+        classpath group: 'gripes', name: 'gripes-plugin', version: '0.1.4'
+		classpath group: 'gripes', name: 'gripes-web', version: '0.1.4'
+		classpath group: 'org.hibernate', name: 'hibernate-core', version: '3.3.2.GA'
+		classpath group: 'javax.persistence', name: 'persistence-api', version: '1.0'
+	}
+}

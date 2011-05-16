@@ -1,0 +1,6 @@
+<table id="MODELList" class="tableList">
+	LISTHEADER
+	<c:forEach items="BEANLIST" var="item">
+		LISTENTRY
+	</c:forEach>
+</table>

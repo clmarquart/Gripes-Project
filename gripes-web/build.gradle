@@ -1,0 +1,62 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+
+logger.quiet "Building Gripes-Web"
+
+group = 'gripes'
+archivesBaseName = 'gripes-web'
+version = '0.1.4'
+
+repositories {
+    mavenCentral()
+    mavenRepo urls: "http://www.gripes-project.org/libs"
+}
+
+sourceSets {
+	main {
+	    java { srcDir 'src/main/java' }
+		groovy { srcDir 'src/main/groovy' }
+	    resources { srcDir 'src/main/resources' }
+	}	
+}
+
+
+dependencies {
+	//** Gradle API
+	compile gradleApi()
+	
+	//** Groovy
+	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'
+	
+	//** Servlet
+	compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+	compile group: 'javax.servlet', name: 'jsp-api', version: '2.0'
+
+	//** Framework
+	compile group: 'net.sourceforge.stripes', name: 'stripes', version: '1.5.6'
+	
+	//** Database
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '3.3.2.GA'
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.4.0.GA'
+	compile group: 'org.hibernate', name: 'hibernate-annotations', version: '3.4.0.GA'
+	compile group: 'org.hibernate', name: 'ejb3-persistence', version: '3.3.2.Beta1'
+	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
+	runtime group: 'org.hibernate', name: 'hibernate-c3p0', version: '3.3.2.GA'
+	compile name: 'stripersist', version: '1.0.3'
+	compile name: 'stripesstuff', version: '0.1'
+}
+
+
+uploadArchives {
+    repositories {
+       flatDir(dirs: file('repos'))
+    }
+}
+uploadArchives.doLast {
+	ant {
+		copy(todir:buildDir.canonicalPath+"/"+libsDirName) {
+	    	fileset(dir:buildDir.canonicalPath, includes:"ivy.xml")
+		}
+		delete(file: buildDir.canonicalPath+"/ivy.xml")
+    }
+}

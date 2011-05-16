@@ -1,0 +1,8 @@
+<div class='fieldRow'>
+	<div class='fieldLabel'>
+		<label for='lblLABEL'>LABEL</label>
+	</div>
+	<div class='fieldInput'>
+		<input type='TYPE' name='LABEL' value='VALUE' />
+	</div>
+</div>

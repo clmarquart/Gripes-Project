@@ -1,0 +1,47 @@
+dependencies {
+	//** Groovy
+	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'
+	
+	//** Framework
+	compile group: 'net.sourceforge.stripes', name: 'stripes', version: '1.5.6'
+	
+	//** Servlet
+	compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+	
+	//** Logging
+	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
+	compile group: 'ch.qos.logback', name: 'logback-core', version: '0.9.28'
+	compile group: 'ch.qos.logback', name: 'logback-access', version: '0.9.28'
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: '0.9.28'
+	
+	//** Database
+	compile group: 'org.hsqldb', name: 'hsqldb', version: '2.0.0'
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '3.3.2.GA'
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.4.0.GA'
+	compile group: 'org.hibernate', name: 'hibernate-annotations', version: '3.4.0.GA'
+	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
+	runtime group: 'org.hibernate', name: 'hibernate-c3p0', version: '3.3.2.GA'
+	
+	compile name: 'stripersist', version: '1.0.3'
+	compile name: 'stripesstuff', version: '0.1'
+	compile group: 'gripes', name: 'gripes-web', version: '0.1.4'
+}
+
+repositories {
+    mavenCentral()
+    mavenRepo urls: "http://www.gripes-project.org/libs"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        groovy {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'resources'
+        }
+    }
+}

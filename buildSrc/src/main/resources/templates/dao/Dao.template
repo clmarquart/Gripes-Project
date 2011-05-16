@@ -1,0 +1,10 @@
+package PACKAGE.dao
+
+import PACKAGE.dao.base.BaseDao
+import PACKAGE.model.MODEL
+
+class MODELDao extends BaseDao<MODEL,Long> {
+	/**
+	 * Custom DAO Methods go here.
+	 */ 
+}
