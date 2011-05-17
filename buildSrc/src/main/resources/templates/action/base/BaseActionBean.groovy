@@ -2,7 +2,7 @@ package PACKAGE.action.base
 
 import PACKAGE.util.base.BaseActionBeanContext
 
-import net.sf.gripes.GripesActionBean
+import net.sf.gripes.action.GripesActionBean
 
 import net.sourceforge.stripes.action.ActionBeanContext
 

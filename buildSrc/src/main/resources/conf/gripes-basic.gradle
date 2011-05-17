@@ -24,7 +24,8 @@ dependencies {
 	
 	compile name: 'stripersist', version: '1.0.3'
 	compile name: 'stripesstuff', version: '0.1'
-	compile group: 'gripes', name: 'gripes-web', version: '0.1.4'
+/*	compile group: 'gripes', name: 'gripes-web', version: '0.1.4'*/
+	compile project(':gripes-web')
 }
 
 repositories {

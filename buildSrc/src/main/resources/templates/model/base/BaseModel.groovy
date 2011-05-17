@@ -1,6 +1,6 @@
 package PACKAGE.model.base
 
-import net.sf.gripes.GripesBaseModel
+import net.sf.gripes.model.GripesBaseModel
 import javax.persistence.MappedSuperclass
 import javax.persistence.GeneratedValue
 import javax.persistence.Id

@@ -259,6 +259,7 @@ class GripesCreate {
 		
 		urlLoader = (URLClassLoader) this.class.classLoader
 		urlLoader.addURL(new File("build/classes/main/").toURL())
+		urlLoader.addURL(new File("gripes-web/build/classes/main/").toURL())
 		
 		createViews(name, urlLoader.findClass("${GripesUtil.getSettings(project).packageBase}.model.${name}"))	
 	}

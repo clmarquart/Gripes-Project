@@ -6,8 +6,12 @@
 		<stripes:layout-render name="WEB-INF/jsp/includes/_adminBar.jsp"/>
 	</stripes:layout-component>
 	<stripes:layout-component name="content">
-		<c:forEach items="${context.entityClasses}" var="item">
-			<a href="${contextPath}/${fn:toLowerCase(item.simpleName)}/list">${item.simpleName} List</a>
-		</c:forEach>
+		<ul>
+			<c:forEach items="${context.actionableEntities}" var="item">
+				<li>
+					<a href="${contextPath}/${fn:toLowerCase(item.simpleName)}/list">${item.simpleName} List</a>
+				</li>
+			</c:forEach>
+		</ul>
 	</stripes:layout-component>
 </stripes:layout-render>

@@ -21,7 +21,7 @@
   </context-param>
 	<listener>
 	 	<listener-class>
-  		net.sf.gripes.GripesContextListener
+  		net.sf.gripes.util.GripesContextListener
   	</listener-class>
   </listener>
 
@@ -31,7 +31,7 @@
 		<filter-class>net.sourceforge.stripes.controller.StripesFilter</filter-class>
 		<init-param>
 			<param-name>ActionResolver.Class</param-name>
-		 	<param-value>net.sf.gripes.GripesActionResolver</param-value>
+		 	<param-value>net.sf.gripes.util.GripesActionResolver</param-value>
 		</init-param>
 		<init-param>
 			<param-name>ActionResolver.Packages</param-name>
@@ -44,7 +44,7 @@
 				<init-param>
 						<param-name>StripersistInit.Classes</param-name>
 						<param-value>
-							net.sf.gripes.GripesStripersistInit
+							net.sf.gripes.db.GripesStripersistInit
 						</param-value>
 			  </init-param>
 				<init-param>
@@ -52,7 +52,7 @@
 					<param-value>
 				 		org.stripesstuff.stripersist,
 				 		org.stripesstuff.plugin.security,
-						net.sf.gripes.GripesActionResolver
+						net.sf.gripes.util.GripesActionResolver
 				 	</param-value>
 				</init-param>
 				<init-param>

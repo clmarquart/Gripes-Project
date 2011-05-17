@@ -1,0 +1,13 @@
+Getting Started
+
+1. Download and Install Gradle
+2. Create folder for new app (i.e. ~/Sites/GripesApp)
+3. Create new file: 'build.gradle', with contents found here
+4. Run: 'gradle init'
+5. Gripes will update your build.gradle file, edit the gripes{} section accordingly
+6. Run: 'gradle setup'
+7. First entity class: 'gradle create -Pmodel=Page'
+8. Edit the entity, adding properties (i.e. String name, description)
+9. Create actions: 'gradle create -Paction=Page'
+10. Run the app: 'gradle run'
+11. Browse: http://localhost:8888/gripes
