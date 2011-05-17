@@ -4,7 +4,7 @@ import javax.persistence.MappedSuperclass
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 
-import net.sf.gripes.GripesBaseModel
+import net.sf.gripes.model.GripesBaseModel
 
 @MappedSuperclass
 class GripesRole extends GripesBaseModel {

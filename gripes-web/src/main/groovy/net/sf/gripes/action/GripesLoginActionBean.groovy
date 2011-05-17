@@ -1,6 +1,6 @@
 package net.sf.gripes.action
 
-import net.sf.gripes.GripesActionBean
+import net.sf.gripes.action.GripesActionBean
 
 import net.sourceforge.stripes.action.Resolution
 import net.sourceforge.stripes.action.ForwardResolution

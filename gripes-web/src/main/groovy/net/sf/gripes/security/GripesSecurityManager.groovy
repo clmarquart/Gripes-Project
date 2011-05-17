@@ -12,7 +12,7 @@ import net.sourceforge.stripes.action.Resolution
 import org.stripesstuff.plugin.security.InstanceBasedSecurityManager
 import org.stripesstuff.plugin.security.SecurityHandler
 
-import net.sf.gripes.GripesActionBean
+import net.sf.gripes.action.GripesActionBean
 import net.sf.gripes.action.GripesLoginActionBean
 import net.sf.gripes.model.GripesRole
 import net.sf.gripes.model.GripesUser

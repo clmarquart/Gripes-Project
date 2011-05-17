@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.PrePersist
 
-import net.sf.gripes.GripesBaseModel
+import net.sf.gripes.model.GripesBaseModel
 import net.sf.gripes.converter.PasswordTypeConverter
 
 @MappedSuperclass

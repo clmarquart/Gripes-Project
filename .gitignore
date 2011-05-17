@@ -1,0 +1,10 @@
+build/*
+buildSrc/build/*
+gripes-web/build/*
+buildSrc/repos/*
+gripes-web/repos/*
+/src/
+/web/
+/resources/
+/conf/
+.gradle
