@@ -1,22 +1,15 @@
-<persistence xmlns="http://java.sun.com/xml/ns/persistence"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" 
-	version="1.0"> 
-	
-	<persistence-unit name="gripesPU"> 
-    	<!-- Tell JPA to use Hibernate --> 
-	    <provider>org.hibernate.ejb.HibernatePersistence</provider> 
 
-		<!--[ENTITYCLASSES]-->
-		<!--By default, entities are auto-detected, as we only have one PU-->
- 		<!--<class>[CLASS]</class>-->
-		
-	    <!-- Hibernate settings --> 
+	<persistence-unit name="[NAME]"> 
+	    <provider>org.hibernate.ejb.HibernatePersistence</provider> 
+	
+		[CLASSES]
+	
 	    <properties> 
 			<!--
-			Auto-detect @Entity classes, since there is only one default PU
-			-->
 			<property name="hibernate.archive.autodetection" value="class"/>
+			-->
+			[AUTO]
+		
 		    <property name="hibernate.show_sql" value="true" />
 
 			<!-- Hibernate and the SQL schema (validate, create-drop, create, update)--> 
@@ -25,14 +18,14 @@
 			<!-- Tell Hibernate to use HSQLDB --> 
 			<property name="hibernate.dialect" value="[DBDIALECT]"/> 
 			<property name="hibernate.connection.driver_class" value="[DBDRIVER]"/> 
- 
+
 			<!-- Configure the JDBC database connection --> 
 			<property name="hibernate.connection.url" value="[DBURL]" />
 			<property name="hibernate.connection.username" value="[DBUSER]"/> 
 			<property name="hibernate.connection.password" value="[DBPASSWORD]"/> 
-			
+		
 			<property name="jdbc.batch_size" value="0"/> 
- 
+
 			<!-- Configure the connection pool --> 
 			<property name="hibernate.c3p0.min_size" value="5"/> 
 			<property name="hibernate.c3p0.max_size" value="20"/> 
@@ -41,4 +34,3 @@
 			<property name="hibernate.c3p0.idle_test_period" value="3000"/> 
 	    </properties> 
 	</persistence-unit> 
-</persistence>

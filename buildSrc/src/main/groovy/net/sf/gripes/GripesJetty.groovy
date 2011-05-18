@@ -34,14 +34,34 @@ class GripesJetty {
 		
 		def dbConfig = new ConfigSlurper().parse(new File('conf/DB.groovy').toURL())
 		
-		def jpaTemplate = getResource("conf/persistence.template").text
-		jpaTemplate = jpaTemplate
-						.replaceAll(/\[DBSCHEMA\]/,dbConfig.database.schema)
-						.replaceAll(/\[DBDIALECT\]/,dbConfig.database.dialect)
-						.replaceAll(/\[DBDRIVER\]/,dbConfig.database.driver)
-						.replaceAll(/\[DBURL\]/,dbConfig.database.url)
-						.replaceAll(/\[DBUSER\]/,dbConfig.database.user)
-						.replaceAll(/\[DBPASSWORD\]/,dbConfig.database.password)
+		def jpaTemplate = """
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" 
+	version="1.0">
+		"""
+		dbConfig.database.each { k,v ->
+			jpaTemplate += getResource("conf/persistence.template").text
+			jpaTemplate = jpaTemplate
+							.replaceAll(/\[NAME\]/,k)
+							.replaceAll(/\[DBSCHEMA\]/,v.schema)
+							.replaceAll(/\[DBDIALECT\]/,v.dialect)
+							.replaceAll(/\[DBDRIVER\]/,v.driver)
+							.replaceAll(/\[DBURL\]/,v.url)
+							.replaceAll(/\[DBUSER\]/,v.user)
+							.replaceAll(/\[DBPASSWORD\]/,v.password)
+						
+		    if(v.classes.equals("auto")) {
+				jpaTemplate = jpaTemplate
+								.replaceAll(/\[AUTO\]/,'<property name="hibernate.archive.autodetection" value="class"/>')
+								.replaceAll(/\[CLASSES\]/,'')
+			} else {
+				jpaTemplate = jpaTemplate
+								.replaceAll(/\[AUTO\]/,'')
+								.replaceAll(/\[CLASSES\]/, v.classes.collect{"<class>$it</class>"}.join("\n"))
+			}	
+		}
+		jpaTemplate += "\n</persistence>\n"
 						
 		[
 			new File("build/classes/main/META-INF/"), 
