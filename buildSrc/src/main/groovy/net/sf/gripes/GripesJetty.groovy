@@ -86,6 +86,11 @@ class GripesJetty {
 		props.deleteOnExit()
 		props.text = new File(GripesUtil.getResourceDir(project)+"/StripesResources.properties").text
 		
+		def dbfile = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/DB.groovy")
+		dbfile.createNewFile()
+		dbfile.deleteOnExit()
+		dbfile.text = new File('conf/DB.groovy').text
+		
 		/*		
 		def importSQL = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/import.sql")
 		importSQL.createNewFile()

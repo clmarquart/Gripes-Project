@@ -30,3 +30,23 @@ buildscript {
 		classpath group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	}
 }
+apply plugin: 'java'
+apply plugin: 'jetty'
+
+apply from: 'conf/gripes-basic.gradle'
+
+gripes {
+	appName = "Gripes Application"
+	server = [
+		contextPath : "/gripes",
+		webAppSourceDirectory : file("web"),
+		httpPort : 8888,
+		stopPort : 8889,
+		stopKey  : "stopJetty",
+		scanIntervalSeconds : 1,
+		scanTargets : [file("build/classes/main")]
+	]
+	src = "/src"
+	resources = "/resources"
+	packageBase = "com.acme"
+}

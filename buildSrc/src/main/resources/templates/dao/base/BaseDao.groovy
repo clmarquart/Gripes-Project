@@ -2,7 +2,7 @@ package PACKAGE.dao.base
 
 import java.util.List
 
-import org.stripesstuff.stripersist.Stripersist
+import net.sf.gripes.stripersist.Gripersist
 import javax.persistence.EntityManager
 import javax.persistence.NoResultException
 import javax.persistence.NonUniqueResultException
@@ -11,7 +11,7 @@ import javax.persistence.Query
 import org.hibernate.Session;
 
 public abstract class BaseDao<T,Long> {
-    protected Class entityClass;
+    protected Class entityClass
     
     BaseDao() {
 		entityClass = Class.forName(this.class.name.replace("dao","model").replace("Dao",""))
@@ -69,11 +69,11 @@ public abstract class BaseDao<T,Long> {
     }
 
     def getEntityManager() {
-		Stripersist.getEntityManager()
+		Gripersist.getEntityManager()
 	}
 
     Session getSession() {
-		Stripersist.getEntityManager().getDelegate()
+		getEntityManager().getDelegate()
     }
     
     protected Class getEntityClass() {

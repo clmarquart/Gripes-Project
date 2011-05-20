@@ -1,5 +1,5 @@
 database {
-	gripesPu {
+	gripesPU {
 		schema = "create-drop"
 		dialect = "org.hibernate.dialect.HSQLDialect"
 		driver = "org.hsqldb.jdbc.JDBCDriver"

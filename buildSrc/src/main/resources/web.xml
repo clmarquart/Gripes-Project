@@ -50,7 +50,7 @@
 				<init-param>
 					<param-name>Extension.Packages</param-name>
 					<param-value>
-				 		org.stripesstuff.stripersist,
+				 		net.sf.gripes.stripersist,
 				 		org.stripesstuff.plugin.security,
 						net.sf.gripes.util.GripesActionResolver
 				 	</param-value>
