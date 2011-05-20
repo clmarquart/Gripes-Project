@@ -29,13 +29,9 @@ class GripesContextListener  implements ServletContextListener {
 		}
 		
 		def tempStr
-		try {
-			tempStr = context.TEMPDIR
-		} catch(e) {
-			tempStr = context.getRealPath("/")+"/WEB-INF/work"
-		}
-		
-		def tempDir = new File("${tempStr}")
+		try { tempStr = context.TEMPDIR } 
+		catch(e) { tempStr = context.getRealPath("/")+"/WEB-INF/work" }		
+		def tempDir = new File(tempStr)
 		if(!tempDir.exists()){
 			tempDir.mkdirs()
 			tempDir.deleteOnExit()

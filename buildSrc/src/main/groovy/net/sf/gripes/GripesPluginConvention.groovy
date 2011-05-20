@@ -9,6 +9,7 @@ class GripesPluginConvention {
 	String stopPort
 	String webappSource
 	def server
+	def addons
 
     def gripes(Closure closure) {
         closure.delegate = this

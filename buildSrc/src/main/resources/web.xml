@@ -15,14 +15,13 @@
 		</init-param>
 	</servlet>
 	-->
+	
   <context-param>
     <param-name>GripesPackage</param-name>
     <param-value>PACKAGE</param-value>
   </context-param>
 	<listener>
-	 	<listener-class>
-  		net.sf.gripes.util.GripesContextListener
-  	</listener-class>
+	 	<listener-class>net.sf.gripes.util.GripesContextListener</listener-class>
   </listener>
 
 	<filter>
@@ -38,27 +37,25 @@
 		 	<param-value>PACKAGE.action</param-value>
 		</init-param>
 		<init-param>
-		    <param-name>ActionBeanContext.Class</param-name>
-		    <param-value>PACKAGE.util.base.BaseActionBeanContext</param-value>
+	    <param-name>ActionBeanContext.Class</param-name>
+	    <param-value>PACKAGE.util.base.BaseActionBeanContext</param-value>
 		</init-param>
-				<init-param>
-						<param-name>StripersistInit.Classes</param-name>
-						<param-value>
-							net.sf.gripes.db.GripesStripersistInit
-						</param-value>
-			  </init-param>
-				<init-param>
-					<param-name>Extension.Packages</param-name>
-					<param-value>
-				 		net.sf.gripes.stripersist,
-				 		org.stripesstuff.plugin.security,
-						net.sf.gripes.util.GripesActionResolver
-				 	</param-value>
-				</init-param>
-				<init-param>
-					<param-name>SecurityManager.Class</param-name>
-					<param-value>net.sf.gripes.security.GripesSecurityManager</param-value>
-				</init-param>
+		<init-param>
+			<param-name>StripersistInit.Classes</param-name>
+			<param-value>net.sf.gripes.db.GripesStripersistInit</param-value>
+	  </init-param>
+		<init-param>
+			<param-name>Extension.Packages</param-name>
+			<param-value>
+		 		net.sf.gripes.stripersist,
+		 		org.stripesstuff.plugin.security,
+				net.sf.gripes.util.GripesActionResolver[PLUGINS]
+		 	</param-value>
+		</init-param>
+		<init-param>
+			<param-name>SecurityManager.Class</param-name>
+			<param-value>net.sf.gripes.security.GripesSecurityManager</param-value>
+		</init-param>
 	</filter>
 	<filter>
 		<filter-name>DynamicMappingFilter</filter-name>

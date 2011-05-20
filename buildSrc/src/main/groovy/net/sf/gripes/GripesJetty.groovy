@@ -91,6 +91,16 @@ class GripesJetty {
 		dbfile.deleteOnExit()
 		dbfile.text = new File('conf/DB.groovy').text
 		
+		def webXmlTemplate = getResource("web.xml").text
+		println "PLUGINS: " + GripesUtil.getSettings(project).addons.join(",")
+		def webXml = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/web.xml")
+		webXml.createNewFile()
+		webXml.deleteOnExit()
+		webXml.text = webXmlTemplate
+						.replaceAll("PROJECTNAME",GripesUtil.getSettings(project).appName)
+						.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
+						.replaceAll(/\[PLUGINS\]/,",\n\t"+GripesUtil.getSettings(project).addons.join(",\n"))
+		
 		/*		
 		def importSQL = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/import.sql")
 		importSQL.createNewFile()

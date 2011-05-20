@@ -14,7 +14,7 @@ class GripesStripersistInit implements StripersistInit {
 	 * and loads a resource named `import.groovy`.  The `import.groovy` script must be 
 	 * located in the root of the resources directory.
 	 * 
-	 * TODO Provider proper error checking for the import of data.
+	 * TODO Provide proper error checking for the import of data.
 	 */
 	void init() {
 		logger.info "Gripes Stripersist Initialization."

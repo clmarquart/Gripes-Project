@@ -49,4 +49,7 @@ gripes {
 	src = "/src"
 	resources = "/resources"
 	packageBase = "com.acme"
+	addons = [
+		"net.sf.gripes.plugins.auth"
+	]
 }

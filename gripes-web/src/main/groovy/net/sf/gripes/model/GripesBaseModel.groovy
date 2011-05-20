@@ -9,12 +9,11 @@ abstract class GripesBaseModel {
 	def missingMethods = ["save","list","findBy"]
 	
 	def getList() {
-/*        getEntityManager().createQuery("from " + this.class.name + " t ").getResultList()*/
 		getDao().list()
 	}
 	
 	def save() {
-		def dao = getDao() //Class.forName("${this.class.package.name.replace('model','dao')}.${this.class.simpleName}Dao").newInstance()
+		def dao = getDao()
 		dao.save(this)
 		dao.commit()
 	}
@@ -30,7 +29,6 @@ abstract class GripesBaseModel {
 	}
 	
 	def list(map){
-/*        getEntityManager().createQuery("from " + this.class.name + " t ").getResultList()*/
 		getList()
 	}
 	
@@ -45,15 +43,7 @@ abstract class GripesBaseModel {
 	def getDao() {
 		Class.forName("${this.class.package.name.replace('model','dao')}.${this.class.simpleName}Dao").newInstance()
 	}
-/*	
-	protected EntityManager getEntityManager() {
-		Stripersist.getEntityManager()
-	}
 	
-    protected Session getSession() {
-        (Session) getEntityManager().getDelegate();
-    }
-*/
 	def methodMissing(String name, args) {
 		def method = missingMethods.find{name.startsWith(it)}
 		if(method) {

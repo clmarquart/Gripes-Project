@@ -154,11 +154,12 @@ class GripesCreate {
 					.replaceAll("PKG","PACKAGE")
 			)
 		}
+/*		
 		saveFile(
 			new File(GripesUtil.getRoot(project)+"/web/WEB-INF/web.xml"),
 			getResource("web.xml").text.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
 		)
-
+*/
 		/*		
 		copyActionBeanContext(project)*/
 		
