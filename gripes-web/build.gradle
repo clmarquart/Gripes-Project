@@ -30,6 +30,7 @@ dependencies {
 	
 	//** Servlet
 	compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+	compile group: 'org.mortbay.jetty', name: 'jetty', version: '6.1.26'
 	compile group: 'javax.servlet', name: 'jsp-api', version: '2.0'
 
 	//** Framework
@@ -42,6 +43,7 @@ dependencies {
 	compile group: 'org.hibernate', name: 'ejb3-persistence', version: '3.3.2.Beta1'
 	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	runtime group: 'org.hibernate', name: 'hibernate-c3p0', version: '3.3.2.GA'
+	
 	compile name: 'stripersist', version: '1.0.3'
 	compile name: 'stripesstuff', version: '0.1'
 }

@@ -48,15 +48,20 @@
 			<param-name>Extension.Packages</param-name>
 			<param-value>
 		 		net.sf.gripes.stripersist,
+				<!--
 		 		org.stripesstuff.plugin.security,
-				net.sf.gripes.util.GripesActionResolver[PLUGINS]
+				-->
+				net.sf.gripes.util.GripesActionResolver
 		 	</param-value>
 		</init-param>
+		<!--
 		<init-param>
 			<param-name>SecurityManager.Class</param-name>
 			<param-value>net.sf.gripes.security.GripesSecurityManager</param-value>
 		</init-param>
+		-->
 	</filter>
+	
 	<filter>
 		<filter-name>DynamicMappingFilter</filter-name>
 		<filter-class>

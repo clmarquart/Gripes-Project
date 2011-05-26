@@ -1,7 +1,5 @@
 package net.sf.gripes
 
-/*import org.mortbay.jetty.NCSARequestLog*/
-
 class GripesJetty {
 	def project
 	def webXml
@@ -65,7 +63,7 @@ class GripesJetty {
 						
 		[
 			new File("build/classes/main/META-INF/"), 
-			new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/")
+			new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/gripes/addons")
 		].each {
 			it.mkdirs()
 			it.deleteOnExit()
@@ -76,6 +74,24 @@ class GripesJetty {
 		jpaFile.deleteOnExit()
 		jpaFile.text = jpaTemplate
 		
+		new AntBuilder().copy(todir: project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/gripes/addons") {
+			fileset(dir: "addons") {
+				include(name:"**/*.*")
+			}
+		}
+		
+		[
+			"import.groovy",
+			"StripesResources.properties",
+			"DB.groovy",
+			"Config.groovy"
+		].each {
+			def newFile = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/${it}")
+			newFile.createNewFile()
+			newFile.deleteOnExit()
+			newFile.text = new File(GripesUtil.getResourceDir(project)+"/${it}").text
+		}
+/*		
 		def boot = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/import.groovy")
 		boot.createNewFile()
 		boot.deleteOnExit()
@@ -90,16 +106,17 @@ class GripesJetty {
 		dbfile.createNewFile()
 		dbfile.deleteOnExit()
 		dbfile.text = new File('conf/DB.groovy').text
-		
+*/
+
 		def webXmlTemplate = getResource("web.xml").text
-		println "PLUGINS: " + GripesUtil.getSettings(project).addons.join(",")
 		def webXml = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/web.xml")
 		webXml.createNewFile()
 		webXml.deleteOnExit()
 		webXml.text = webXmlTemplate
 						.replaceAll("PROJECTNAME",GripesUtil.getSettings(project).appName)
 						.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
-						.replaceAll(/\[PLUGINS\]/,",\n\t"+GripesUtil.getSettings(project).addons.join(",\n"))
+						
+/*						.replaceAll(/\[PLUGINS\]/,",\n\t"+GripesUtil.getSettings(project).addons.join(",\n"))*/
 		
 		/*		
 		def importSQL = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/import.sql")

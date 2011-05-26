@@ -21,6 +21,7 @@ class GripesCreate {
 			delete(dir: "src")
 			delete(dir: "resources")
 			delete(dir: "web")
+			delete(dir: "addons")
 		}
 	}
 	
@@ -160,61 +161,6 @@ class GripesCreate {
 			getResource("web.xml").text.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
 		)
 */
-		/*		
-		copyActionBeanContext(project)*/
-		
-		/*		
-		def mainLayout = new File(dir.canonicalPath+"/layout/main.jsp")
-		saveFile(mainLayout,getResource("templates/jsp/layouts/main.jsp").text)
-		
-		def taglibs = new File(dir.canonicalPath+"/includes/taglibs.jsp")
-		saveFile(taglibs,getResource("templates/jsp/includes/taglibs.template").text)
-		
-		def adminbar = new File(dir.canonicalPath+"/includes/_adminBar.jsp")
-		saveFile(adminbar,getResource("templates/jsp/includes/_adminBar.template").text)
-		
-		def css = new File(GripesUtil.getRoot(project)+"/web/style/main.css")
-		saveFile(css,getResource("resources/css/main.css").text)
-		
-		def js = new File(GripesUtil.getRoot(project)+"/web/script/jquery.js")
-		saveFile(js,getResource("resources/js/jquery.js").text)
-		
-		js = new File(GripesUtil.getRoot(project)+"/web/script/main.js")
-		saveFile(js,getResource("resources/js/main.js").text)
-		
-		def res = new File(GripesUtil.getRoot(project)+"/src/StripesResources.properties")
-		saveFile(res,new File(GripesUtil.getResourceDir(project)+"/StripesResources.properties").text)
-		
-		saveFile(new File(GripesUtil.getRoot(project)+"/resources/import.groovy"), "")
-		
-		//this may not work uncommented, moved from different method w/ changes variables
-		def template = getResource("templates/dao/base/BaseDao.template").text
-						.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
-		file = new File(GripesUtil.getBasePackage(project)+"/dao/base/BaseDao.groovy")
-		saveFile(file,template)
-		
-		def newFile = new File(GripesUtil.getBasePackage(project)+"/action/base/BaseActionBean.groovy")
-		if(!newFile.exists()) {
-			newFile.createNewFile()
-			newFile.text = getResource("templates/action/BaseAction.template").text
-								.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
-		}
-		newFile = new File(GripesUtil.getBasePackage(project)+"/model/base/BaseModel.groovy")
-		if(!newFile.exists()) {
-			newFile.createNewFile()
-			newFile.text = getResource("templates/model/BaseModel.template").text
-								.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
-		}
-		
-		
- 		def webXml = new File(GripesUtil.getRoot(project)+"/web/WEB-INF/web.xml")
-		logger.debug "Web Xml: {}", webXml
-		if(!webXml.exists()) {
-		    def webXmlText = getResource("web.xml").text
-			webXml.createNewFile()
-			webXml.text = webXmlText.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)	
-		}
-		*/
 	}
 	
 	/**
@@ -278,12 +224,27 @@ class GripesCreate {
 		createViews(name, urlLoader.findClass("${GripesUtil.getSettings(project).packageBase}.model.${name}"))
 	}
 	
-	private def saveFile(file,template) {
-		println "Saving $file"
-		println "setting text: ${template.length()}"
-		if(!file.parentFile.exists()){
-			file.parentFile.mkdirs()
+	/**
+	 * Install the specified add-on.  
+	 * TODO Hook into http://www.gripes-project.org/addons/_name_/
+	 * TODO Add a check in the contextlistener to load addons from the /addons dir
+	 */
+	def install(addon) {
+		logger.info "Installing the {} add-on.", addon
+		makeDir(new File("addons/${addon}"))
+	}
+	
+	private def makeDir(parentFile) {
+		if(!parentFile.exists()){
+			parentFile.mkdirs()
 		}
+	}
+	
+	private def saveFile(file,template) {
+		logger.info "Saving {}", file
+		logger.info "setting text: {}", template.length()
+		
+		makeDir(file.parentFile)
 		if(!file.exists()) {
 			file.createNewFile()
 			file.text = template

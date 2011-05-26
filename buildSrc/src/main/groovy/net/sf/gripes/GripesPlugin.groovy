@@ -2,7 +2,7 @@ import net.sf.gripes.*
 
 import org.gradle.api.Project
 import org.gradle.api.Plugin
-
+import org.gradle.api.tasks.SourceSet
 import javax.persistence.Column
 
 /**
@@ -22,6 +22,10 @@ class GripesPlugin implements Plugin<Project> {
 	 */
 	def void apply(Project project) {
         project.convention.plugins.gripes = new GripesPluginConvention()
+
+		project.beforeEvaluate {
+			println "BEFORE"
+		}
 
 		def deleteTask = project.task('delete') << {
 			GripesCreate creator = new GripesCreate([project: project])
@@ -64,12 +68,25 @@ class GripesPlugin implements Plugin<Project> {
 			jetty.start()
 		}
 		runTask.dependsOn<<project.compileGroovy
+		runTask.configure {
+			def gripesConfig = new ConfigSlurper().parse(new File("resources/Config.groovy").text)
+			gripesConfig.addons.each {
+				println "Adding $it to the SourceDir"
+				project.sourceSets.main.groovy.srcDirs += new File("addons/${it}/src/main/groovy")
+			}
+		}
 		
 		def stopTask = project.task('stop') << {
 			project.convention.plugins.gripes.server.each {k,v->
 				project.jettyStop[k] = v
 			}
 			project.jettyStop.execute()
+		}
+		
+		
+		def installTask = project.task('install') << {
+			GripesCreate creator = new GripesCreate([project: project])
+			creator.install(project.properties.addon)
 		}
     }
 

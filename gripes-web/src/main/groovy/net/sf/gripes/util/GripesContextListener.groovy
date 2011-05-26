@@ -4,13 +4,16 @@ import javax.servlet.ServletContext
 import javax.servlet.ServletContextEvent
 import javax.servlet.ServletContextListener
 
+import org.mortbay.jetty.servlet.FilterMapping
+import org.mortbay.jetty.servlet.FilterHolder
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class GripesContextListener  implements ServletContextListener {
 	Logger logger = LoggerFactory.getLogger(GripesContextListener.class)
 	
-	ServletContext context
+	def context
 	
 	void contextInitialized(ServletContextEvent contextEvent) {
 		logger.info "Loading the Gripes Application..."
@@ -37,6 +40,38 @@ class GripesContextListener  implements ServletContextListener {
 			tempDir.deleteOnExit()
 		}
 		System.setProperty("gripes.temp", tempDir.toString())
+		
+		// TODO need to compensate for the Catalina method of implementing these Filters
+		def gripesConfig = new ConfigSlurper().parse(this.class.classLoader.getResource("Config.groovy").text)
+		gripesConfig.addons.each {
+			def addonName = it
+			def addon = new ConfigSlurper().parse(this.class.classLoader.getResource("gripes/addons/${addonName}/gripes.addon"))
+			addon.filters.each {k,v ->
+				def filterConfig = v
+				def holder = context.contextHandler.servletHandler.getFilter(k)
+				logger.debug "Attaching the {} addon to the {}", addonName, k
+				if(!holder){
+					holder = new FilterHolder(
+						heldClass : Class.forName(filterConfig.classname),
+						name : k
+					)
+					def mapping= new FilterMapping(
+						filterName : k,
+						pathSpec : filterConfig.map,
+						dispatches : FilterHolder.dispatch(filterConfig.dispatch)
+					)
+
+					context.contextHandler.servletHandler.addFilter(holder,mapping)	
+				}	
+				filterConfig.params.each {kk,vv ->
+					logger.debug "The {} addon is updating the {} param for the {}", addonName, kk, k
+					if(vv.startsWith("+")) 
+						holder.setInitParameter(kk,holder.getInitParameter(kk)+","+vv[1..vv.length()-1])
+					else
+						holder.setInitParameter(kk,vv)
+				}
+			}
+		}
 	}
 	
 	void contextDestroyed(ServletContextEvent contextEvent) {
