@@ -104,8 +104,6 @@ class GripesCreate {
 		 'images',
 		 'WEB-INF/jsp/layout',
 		 'WEB-INF/jsp/includes',
-		 'WEB-INF/gsp/layout',
-		 'WEB-INF/gsp/includes',
 		 'WEB-INF/classes',
 		 'WEB-INF/work',
 		 'META-INF'

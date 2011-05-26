@@ -3,19 +3,6 @@
 	
 	<display-name>PROJECTNAME</display-name>
 	
-	<!--
-	Use this to unlock files with Jetty on Windows
-	--> 
-	<!--
-	<servlet>
-	 	<servlet-name>default</servlet-name>
-		<init-param>
-			<param-name>useFileMappedBuffer</param-name>
-			<param-value>false</param-value>
-		</init-param>
-	</servlet>
-	-->
-	
   <context-param>
     <param-name>GripesPackage</param-name>
     <param-value>PACKAGE</param-value>
@@ -48,18 +35,9 @@
 			<param-name>Extension.Packages</param-name>
 			<param-value>
 		 		net.sf.gripes.stripersist,
-				<!--
-		 		org.stripesstuff.plugin.security,
-				-->
 				net.sf.gripes.util.GripesActionResolver
 		 	</param-value>
 		</init-param>
-		<!--
-		<init-param>
-			<param-name>SecurityManager.Class</param-name>
-			<param-value>net.sf.gripes.security.GripesSecurityManager</param-value>
-		</init-param>
-		-->
 	</filter>
 	
 	<filter>
@@ -75,15 +53,6 @@
 		<dispatcher>FORWARD</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
-	
-  <servlet>
-      <servlet-name>Template</servlet-name>
-      <servlet-class>groovy.servlet.TemplateServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-      <servlet-name>Template</servlet-name>
-      <url-pattern>*.gsp</url-pattern>
-  </servlet-mapping>
 	
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
