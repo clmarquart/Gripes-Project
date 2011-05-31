@@ -68,7 +68,7 @@ class GripesCreate {
 		logger.info "Setting up Gripes project"
 		
 		[
-			'conf/DB.groovy','conf/Config.groovy',
+			'resources/DB.groovy','resources/Config.groovy',
 			'resources/StripesResources.properties',
 			'resources/logback.groovy',
 			'web/index.jsp'
@@ -224,12 +224,25 @@ class GripesCreate {
 	
 	/**
 	 * Install the specified add-on.  
+	 * 
 	 * TODO Hook into http://www.gripes-project.org/addons/_name_/
-	 * TODO Add a check in the contextlistener to load addons from the /addons dir
 	 */
 	def install(addon) {
 		logger.info "Installing the {} add-on.", addon
 		makeDir(new File("addons/${addon}"))
+		download(addon)
+	}
+	
+	private def download(addon) {
+	    def file = new FileOutputStream("addons/${addon}/gripes.addon")
+	    def out = new BufferedOutputStream(file)
+	    out << new URL("http://www.gripes-project.org/addons/${addon}/gripes.addon").openStream()
+	    out.close()
+	
+	    file = new FileOutputStream("addons/${addon}/${addon}.jar")
+	    out = new BufferedOutputStream(file)
+	    out << new URL("http://www.gripes-project.org/addons/${addon}/bin/${addon}.jar").openStream()
+	    out.close()
 	}
 	
 	private def makeDir(parentFile) {

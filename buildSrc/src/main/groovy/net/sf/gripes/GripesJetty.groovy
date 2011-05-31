@@ -30,7 +30,9 @@ class GripesJetty {
 			new File(GripesUtil.getRoot(project)+"/buildSrc/build/classes/main")
 		]
 		
-		def dbConfig = new ConfigSlurper().parse(new File('conf/DB.groovy').toURL())
+		def ant = new AntBuilder()
+		def dbConfig = new ConfigSlurper().parse(new File('resources/DB.groovy').toURL())
+		def gripesConfig = new ConfigSlurper().parse(new File('resources/Config.groovy').toURL())
 		
 		def jpaTemplate = """
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
@@ -74,11 +76,6 @@ class GripesJetty {
 		jpaFile.deleteOnExit()
 		jpaFile.text = jpaTemplate
 		
-		new AntBuilder().copy(todir: project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/gripes/addons") {
-			fileset(dir: "addons") {
-				include(name:"**/*.*")
-			}
-		}
 		
 		[
 			"import.groovy",
@@ -91,22 +88,24 @@ class GripesJetty {
 			newFile.deleteOnExit()
 			newFile.text = new File(GripesUtil.getResourceDir(project)+"/${it}").text
 		}
-/*		
-		def boot = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/import.groovy")
-		boot.createNewFile()
-		boot.deleteOnExit()
-		boot.text = new File(GripesUtil.getResourceDir(project)+"/import.groovy").text
 		
-		def props = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/StripesResources.properties")
-		props.createNewFile()
-		props.deleteOnExit()
-		props.text = new File(GripesUtil.getResourceDir(project)+"/StripesResources.properties").text
-		
-		def dbfile = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/DB.groovy")
-		dbfile.createNewFile()
-		dbfile.deleteOnExit()
-		dbfile.text = new File('conf/DB.groovy').text
-*/
+		gripesConfig.addons.each {
+			new File("addons/${it}").eachFileRecurse {
+				def dest
+				if(it.name.endsWith(".jar"))
+					dest = project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/lib/${it.name}"
+				else
+					dest = project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/gripes/${it}"
+				
+
+				dest = new File(dest)
+				ant.copy(
+					file: it, 
+					tofile: dest.canonicalPath
+				)
+				dest.deleteOnExit()
+			}
+		}
 
 		def webXmlTemplate = getResource("web.xml").text
 		def webXml = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/web.xml")
@@ -116,24 +115,10 @@ class GripesJetty {
 						.replaceAll("PROJECTNAME",GripesUtil.getSettings(project).appName)
 						.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
 						
-/*						.replaceAll(/\[PLUGINS\]/,",\n\t"+GripesUtil.getSettings(project).addons.join(",\n"))*/
-		
-		/*		
-		def importSQL = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/import.sql")
-		importSQL.createNewFile()
-		importSQL.deleteOnExit()
-		importSQL.text = new File(GripesUtil.getResourceDir(project)+"/import.sql").text
-		
-		def logback = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/logback.groovy")
-		logback.createNewFile()
-		logback.deleteOnExit()
-		logback.text = new File(GripesUtil.getResourceDir(project)+"/logback.groovy").text*
-		
-		logback = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/log4j.properties")
-		logback.createNewFile()
-		logback.deleteOnExit()
-		logback.text = new File(GripesUtil.getResourceDir(project)+"/log4j.properties").text
-		*/
+						/*
+						.replaceAll(/\[PLUGINS\]/,",\n\t"+GripesUtil.getSettings(project).addons.join(",\n"))
+						*/
+
 		
 		// Call createPersistenceXml() and create it from the 
 		// template, with the proper configuration

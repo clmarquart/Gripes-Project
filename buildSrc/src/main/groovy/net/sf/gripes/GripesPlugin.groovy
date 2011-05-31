@@ -69,10 +69,13 @@ class GripesPlugin implements Plugin<Project> {
 		}
 		runTask.dependsOn<<project.compileGroovy
 		runTask.configure {
-			def gripesConfig = new ConfigSlurper().parse(new File("resources/Config.groovy").text)
-			gripesConfig.addons.each {
-				println "Adding $it to the SourceDir"
-				project.sourceSets.main.groovy.srcDirs += new File("addons/${it}/src/main/groovy")
+			def configFile = new File("resources/Config.groovy")
+			if(configFile.exists()) {
+				def gripesConfig = new ConfigSlurper().parse(configFile.text)
+				gripesConfig.addons.each {
+					println "Adding $it to the SourceDir"
+					project.sourceSets.main.groovy.srcDirs += new File("gripes-addons/${it}/src/main/groovy")
+				}
 			}
 		}
 		

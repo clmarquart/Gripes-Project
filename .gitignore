@@ -8,3 +8,5 @@ gripes-web/repos/*
 /resources/
 /conf/
 .gradle
+addons2/*
+addons/*
