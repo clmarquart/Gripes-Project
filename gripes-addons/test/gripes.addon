@@ -1,0 +1,10 @@
+filters {
+	TestFilter {
+		classname = "net.sf.TestFilter"
+		dispatch = "REQUEST"
+		map = "/filter/*"
+		params = [
+			"param": "value"
+		]
+	}
+}

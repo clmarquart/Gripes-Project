@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+
+group = 'gripes'
+archivesBaseName = 'gripes-auth'
+version = '0.1.0'
+libsDirName = "bin/${group}/${archivesBaseName}/${version}"
+
+repositories {
+	mavenCentral()
+    mavenRepo urls: "http://www.gripes-project.org/libs"
+}
+
+dependencies {
+	//** Groovy
+	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'
+	
+	//** Servlet
+	compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+}
+
+uploadArchives {
+    repositories {
+       flatDir(dirs: file(libsDirName))
+    }
+}
