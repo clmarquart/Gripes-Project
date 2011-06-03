@@ -90,20 +90,34 @@ class GripesJetty {
 		}
 		
 		gripesConfig.addons.each {
-			new File("addons/${it}").eachFileRecurse {
-				def dest
-				if(it.name.endsWith(".jar"))
-					dest = project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/lib/${it.name}"
-				else
-					dest = project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/gripes/${it}"
+			try {
+				def addonDir = (new File("addons/${it}").exists())?(new File("addons/${it}")):(new File("gripes-addons/${it}"))
 				
-
-				dest = new File(dest)
 				ant.copy(
-					file: it, 
-					tofile: dest.canonicalPath
+					file: "gripes-addons/${it}/gripes.addon",
+					tofile: project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/gripes/gripes-addons/${it}/gripes.addon"
 				)
-				dest.deleteOnExit()
+
+				if(addonDir.canonicalPath.toString().startsWith("addons")) {
+					addonDir.eachFileRecurse {
+						def dest
+						if(it.name.endsWith(".jar"))
+							dest = project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/lib/${it.name}"
+						else
+							dest = project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/gripes/${it}"
+				
+						dest = new File(dest)
+						if(it.isFile()){
+							ant.copy(
+								file: it, 
+								tofile: dest.canonicalPath
+							)
+							dest.deleteOnExit()	
+						}
+					}
+				}
+			}catch(e){
+				e.printStackTrace()
 			}
 		}
 

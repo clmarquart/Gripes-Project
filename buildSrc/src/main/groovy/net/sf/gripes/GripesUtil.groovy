@@ -22,4 +22,21 @@ class GripesUtil {
 	static def getBasePackage(project) {
 		this.getRoot(project)+this.getSettings(project).src+"/"+this.getSettings(project).packageBase.replace(".","/")
 	}
+	
+	static def makeDir(parentFile) {
+		if(!parentFile.exists()){
+			parentFile.mkdirs()
+		}
+	}
+	
+	static def saveFile(file,template) {
+		println "Saving " + file
+		println "setting text: " + template.length()
+		
+		makeDir(file.parentFile)
+		if(!file.exists()) {
+			file.createNewFile()
+			file.text = template
+		}
+	}
 }

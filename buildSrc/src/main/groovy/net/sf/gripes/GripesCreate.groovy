@@ -140,11 +140,11 @@ class GripesCreate {
 			"action/base/BaseActionBean.groovy",
 			"util/base/BaseActionBeanContext.groovy",
 			"model/base/BaseModel.groovy",
-			"action/UserActionBean.groovy",
+/*			"action/UserActionBean.groovy"
 			"dao/UserDao.groovy",
 			"dao/RoleDao.groovy",
 			"model/User.groovy",
-			"model/Role.groovy"
+			"model/Role.groovy"*/
 		].each {
 			saveFile(
 				new File(GripesUtil.getBasePackage(project)+"/${it}"),
@@ -226,11 +226,17 @@ class GripesCreate {
 	 * Install the specified add-on.  
 	 * 
 	 * TODO Hook into http://www.gripes-project.org/addons/_name_/
+	 * TODO Figure out a way to check for both JAR'd and Source addons
 	 */
 	def install(addon) {
 		logger.info "Installing the {} add-on.", addon
-		makeDir(new File("addons/${addon}"))
-		download(addon)
+/*		makeDir(new File("addons/${addon}"))*/
+/*		download(addon)*/
+		
+		def addonConfig = new ConfigSlurper().parse(new File("gripes-addons/${addon}/gripes.addon").text)
+		def installScript = new File("gripes-addons/${addon}/gripes.install")
+		def shell = new GroovyShell(this.class.classLoader,new Binding([project: project]))
+		shell.evaluate(installScript.text)
 	}
 	
 	private def download(addon) {

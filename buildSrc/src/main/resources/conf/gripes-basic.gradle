@@ -46,3 +46,21 @@ sourceSets {
         }
     }
 }
+
+run.doFirst {
+	def gripesConfig = new ConfigSlurper().parse(new File("resources/Config.groovy").text)
+	gripesConfig.addons.each{
+		ant.copy(
+			file: "gripes-addons/${it}/gripes.addon",
+			tofile: "resources/gripes/gripes-addons/${it}/gripes.addon"
+		)
+	}
+}
+run.doLast {
+	def gripesConfig = new ConfigSlurper().parse(new File("resources/Config.groovy").text)
+	gripesConfig.addons.each{
+		ant.delete(
+			file: "resources/gripes/gripes-addons/${it}/gripes.addon"
+		)
+	}
+}

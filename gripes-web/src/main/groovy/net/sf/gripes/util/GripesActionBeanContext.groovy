@@ -2,7 +2,7 @@ package net.sf.gripes.util
 
 import net.sourceforge.stripes.action.ActionBeanContext
 import org.stripesstuff.stripersist.*
-import net.sf.gripes.model.GripesUser
+/*import net.sf.gripes.model.GripesUser*/
 
 public class GripesActionBeanContext extends ActionBeanContext {
 	public def attributes = [:]
@@ -35,6 +35,7 @@ public class GripesActionBeanContext extends ActionBeanContext {
 		actions
 	}
 	
+/*	
 	void setUser(GripesUser user) {
         request.session.setAttribute("gripes.user", user.getId())
     }
@@ -45,4 +46,5 @@ public class GripesActionBeanContext extends ActionBeanContext {
 			null
 		}
     }
+*/
 }

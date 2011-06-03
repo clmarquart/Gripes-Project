@@ -73,7 +73,7 @@ class GripesPlugin implements Plugin<Project> {
 			if(configFile.exists()) {
 				def gripesConfig = new ConfigSlurper().parse(configFile.text)
 				gripesConfig.addons.each {
-					println "Adding $it to the SourceDir"
+					println "Adding: gripes-addons/${it}/src/main/groovy to the sourceSet"
 					project.sourceSets.main.groovy.srcDirs += new File("gripes-addons/${it}/src/main/groovy")
 				}
 			}
