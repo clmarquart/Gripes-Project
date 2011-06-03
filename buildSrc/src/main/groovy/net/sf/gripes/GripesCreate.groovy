@@ -235,8 +235,18 @@ class GripesCreate {
 		
 		def addonConfig = new ConfigSlurper().parse(new File("gripes-addons/${addon}/gripes.addon").text)
 		def installScript = new File("gripes-addons/${addon}/gripes.install")
-		def shell = new GroovyShell(this.class.classLoader,new Binding([project: project]))
-		shell.evaluate(installScript.text)
+		if(installScript.exists()){			
+			new GroovyShell(this.class.classLoader,new Binding([project: project])).evaluate(installScript.text)
+		}
+		
+		def gripesConfigFile = new File("resources/Config.groovy")
+		def gripesConfig = gripesConfigFile.text
+		if((gripesConfig =~ /addons\s*=\s*\[\]/).find()){
+			gripesConfig = gripesConfig.replaceFirst(/addons\s*=\s*\[\s*\]/,'addons=["'+addon+'"]')
+		} else {
+			gripesConfig = gripesConfig.replaceFirst(/addons\s*=\s*\[/,'addons=["'+addon+'",')
+		}
+		gripesConfigFile.text = gripesConfig
 	}
 	
 	private def download(addon) {
