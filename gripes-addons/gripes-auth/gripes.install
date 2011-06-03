@@ -1,0 +1,47 @@
+def base = GripesUtil.getSettings(project).src + "/" + GripesUtil.getSettings(project).packageBase.replaceAll(/\./,"/")
+
+if(base.startsWith(/\//)) base = base[1..base.length()-1]
+
+File beanContext = new File(base+"/util/base/BaseActionBeanContext.groovy")
+
+def newContextText = """
+${beanContext.text[0..beanContext.text.lastIndexOf("}")-1]}
+
+	void setUser(User user) {
+	    request.session.setAttribute("gripes.user", user.getId())
+	}
+	User getUser() {
+		try {
+	        User.find(request.session.getAttribute("gripes.user"))	
+		} catch (e) {
+			null
+		}
+	}
+}
+"""
+
+newContextText = newContextText.replaceFirst(/package([^\n]*)\n/,'''
+package$1
+
+import PACKAGE.User
+import PACKAGE.Role
+
+''').replaceAll(/PACKAGE/,GripesUtil.getSettings(project).packageBase+".model")
+
+[
+	"action/UserActionBean.groovy",
+	"dao/UserDao.groovy",
+	"dao/RoleDao.groovy",
+	"model/User.groovy",
+	"model/Role.groovy"
+].each {
+	GripesUtil.saveFile(
+		new File(GripesUtil.getBasePackage(project)+"/${it}"),
+		new File("gripes-addons/gripes-auth/src/main/resources/templates/${it}").text
+			.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
+			.replaceAll("PKG","PACKAGE")
+	)
+}
+
+
+beanContext.text = newContextText
