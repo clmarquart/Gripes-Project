@@ -1,11 +1,11 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 
-logger.quiet "Building Gripes-Web"
+logger.quiet "Building Gripersist"
 
 group = 'gripes'
-archivesBaseName = 'gripes-web'
-version = '0.1.4'
+archivesBaseName = 'gripersist'
+version = '0.1.1'
 
 repositories {
     mavenCentral()
@@ -15,39 +15,38 @@ repositories {
 
 sourceSets {
 	main {
-	    java { srcDir 'src/main/java' }
-		groovy { srcDir 'src/main/groovy' }
-	    resources { srcDir 'src/main/resources' }
+	    java { srcDir 'src' }
+		groovy { srcDir 'src' }
+	    resources { srcDir 'resources' }
 	}	
 }
 
 
-dependencies {
-	//** Gradle API
-	compile gradleApi()
-	
+dependencies {	
 	//** Groovy
 	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'
 	
 	//** Servlet
 	compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
-	compile group: 'org.mortbay.jetty', name: 'jetty', version: '6.1.26'
-	compile group: 'javax.servlet', name: 'jsp-api', version: '2.0'
+/*	compile group: 'org.mortbay.jetty', name: 'jetty', version: '6.1.26'
+	compile group: 'javax.servlet', name: 'jsp-api', version: '2.0'*/
 
-	//** Framework
+		//** Framework
 	compile group: 'net.sourceforge.stripes', name: 'stripes', version: '1.5.6'
 	
 	//** Database
-	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Alpha3'
+/*	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Alpha3'
 	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.4.0.GA'
 	compile group: 'org.hibernate', name: 'hibernate-annotations', version: '3.5.6-Final'
 	compile group: 'org.hibernate', name: 'ejb3-persistence', version: '3.3.2.Beta1'
 	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '3.6.4.Final'
+			*/
 	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	
-/*	compile name: 'stripersist', version: '1.0.3'*/
-	compile project(":gripersist")
-	compile name: 'stripesstuff', version: '0.1'
+	//** Logging
+	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
+	
+    compile fileTree(dir: 'lib', includes: ['*.jar'])
 }
 
 

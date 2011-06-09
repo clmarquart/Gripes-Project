@@ -225,17 +225,28 @@ class GripesCreate {
 	/**
 	 * Install the specified add-on.  
 	 * 
-	 * TODO Hook into http://www.gripes-project.org/addons/_name_/
-	 * TODO Figure out a way to check for both JAR'd and Source addons
+	 * TODO Verify use of both source and jar addons, spec. the installer 
 	 */
 	def install(addon) {
 		logger.info "Installing the {} add-on.", addon
-/*		makeDir(new File("addons/${addon}"))*/
-/*		download(addon)*/
 		
-		def addonConfig = new ConfigSlurper().parse(new File("gripes-addons/${addon}/gripes.addon").text)
-		def installScript = new File("gripes-addons/${addon}/gripes.install")
-		if(installScript.exists()){			
+		def addonConfig, installScript = "", installScriptFile, installScriptResource
+		if((addon=~/-src/).find()){
+			addon = addon.replaceFirst(/-src/,'')
+			addonConfig = new ConfigSlurper().parse(new File("gripes-addons/${addon}/gripes.addon").text)
+			
+			installScriptFile = new File("gripes-addons/${addon}/gripes.install")
+			
+			if(installScriptFile.exists()) installScript = installScriptFile.text
+		} else {		
+			makeDir(new File("addons/${addon}"))
+			download(addon)
+			
+			installScriptResource = getResource("addons/${addon}/gripes.install")
+			if(installScriptResource) installScript = installScriptResource.text
+		}
+		
+		if(installScript!=""){			
 			new GroovyShell(this.class.classLoader,new Binding([project: project])).evaluate(installScript.text)
 		}
 		
@@ -250,12 +261,24 @@ class GripesCreate {
 	}
 	
 	private def download(addon) {
-	    def file = new FileOutputStream("addons/${addon}/gripes.addon")
-	    def out = new BufferedOutputStream(file)
-	    out << new URL("http://www.gripes-project.org/addons/${addon}/gripes.addon").openStream()
-	    out.close()
+		[
+		 "addons/${addon}/bin"
+		].each {
+			def dir = new File("${it}")
+			if(!dir.exists()) dir.mkdirs()
+		}
+		def fos, out, file
+		["gripes.addon","gripes.install"].each {
+			def location = "addons/${addon}/${it}"
+				
+		    fos = new FileOutputStream(location)		
+			
+		    out = new BufferedOutputStream(fos)
+		    out << new URL("http://www.gripes-project.org/addons/${addon}/${it}").openStream()
+		    out.close()	
+		}
 	
-	    file = new FileOutputStream("addons/${addon}/${addon}.jar")
+	    file = new FileOutputStream("addons/${addon}/bin/${addon}.jar")
 	    out = new BufferedOutputStream(file)
 	    out << new URL("http://www.gripes-project.org/addons/${addon}/bin/${addon}.jar").openStream()
 	    out.close()

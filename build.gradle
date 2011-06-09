@@ -26,7 +26,7 @@ buildscript {
     dependencies {
         classpath group: 'gripes', name: 'gripes-plugin', version: '0.1.4'
 		classpath group: 'gripes', name: 'gripes-web', version: '0.1.4'
-		classpath group: 'org.hibernate', name: 'hibernate-core', version: '3.3.2.GA'
+		classpath group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Alpha3'
 		classpath group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	}
 }

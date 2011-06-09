@@ -1,1 +1,1 @@
-include 'gripes-web'
+include 'gripes-web','gripersist','gripes-addons/gripes-auth'

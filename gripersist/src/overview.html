@@ -1,0 +1,24 @@
+<body>
+ <p>
+  Stripersist provides a simple way to use <a href="http://java.sun.com/developer/technicalArticles/J2EE/jpa/">JPA</a>
+  in <a href="http://www.stripesframework.org">Stripes</a> applications. It does this by providing Stripes with an
+  EntityFormatter and EntityTypeConverter. The EntityFormatter finds the primary key for the entity and returns its
+  value. The EntityTypeConverter takes a primary key value and retrieves the corresponding entity from the database.
+ </p>
+ <p>
+  To start using Stripersist with Stripes you need to do the following:
+  <ol>
+   <li>Set up a JPA EntityManager. Your <code>persistence.xml</code> file should go in
+    <code>WEB-INF/classes/META-INF/</code>. Instructions on how to do that are beyond the scope of this documentation
+    but you can find more info in Sample Chapter 2 of
+    <a href="http://www.manning.com/bauer2/">Java Persistence with Hibernate</a>. The relevant information starts on
+    page 68 of the PDF.</li>
+   <li>Add the Stripersist jar file to you WEB-INF/lib directory.</li>
+   <li>Add <code>com.stripersist</code> to the <code>Extension.Packages</code> parameter of your StripesFilter in web.xml</li>
+  </ol>
+ </p>
+ <p>
+  That's it! Now you should be able to use your entities as properties of your ActionBean and Stripes will handle the
+  binding for you.
+ </p>
+</body>

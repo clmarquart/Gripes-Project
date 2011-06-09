@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory
 class GripesActionResolver extends NameBasedActionResolver {
 	Logger logger = LoggerFactory.getLogger(GripesActionResolver.class)
 	
+	//TODO adding actions on the fly needs to happen from plugin.
 	GripesActionResolver() {
 		logger.info "Initializing Gripes Action Resolver"
 		

@@ -1,5 +1,6 @@
 build/*
 buildSrc/build/*
+gripersist/build/*
 gripes-web/build/*
 buildSrc/repos/*
 gripes-web/repos/*
@@ -11,5 +12,7 @@ gripes-web/repos/*
 cache.bin
 /addons2/*
 /addons/*
+
+/build/
 
 !/gripes-addons

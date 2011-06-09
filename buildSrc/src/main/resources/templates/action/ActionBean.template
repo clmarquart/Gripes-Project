@@ -11,9 +11,13 @@ import org.slf4j.LoggerFactory
 import PACKAGE.dao.MODELDao
 import PACKAGE.model.MODEL
 
+import net.sourceforge.stripes.validation.Validate
+import org.stripesstuff.stripersist.EntityTypeConverter
+
 class MODELActionBean extends BaseActionBean {
 	Logger logger = LoggerFactory.getLogger(MODELActionBean.class)
 	
+	@Validate(converter=EntityTypeConverter.class)
 	MODEL_FIELD
 	
 	@HandlesEvent("view") Resolution view() {

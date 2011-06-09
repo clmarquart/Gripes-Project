@@ -17,6 +17,15 @@ class Gripersist extends Stripersist implements Interceptor, ConfigurableCompone
 	Logger logger = LoggerFactory.getLogger(Gripersist.class)
 	static Logger _logger= LoggerFactory.getLogger(Gripersist.class)
 	
+    static {
+        Package pkg = Stripersist.class.getPackage();
+        _logger.info("""
+##################################################
+# Stripersist Version: ${pkg.getSpecificationVersion()}, Build: ${pkg.getImplementationVersion()}
+# Gripersist Version: 0.1.0
+##################################################""")
+    }
+
     static EntityManager getEntityManager() {
 		_logger.debug "Searching for the EntityManager..."
 		
