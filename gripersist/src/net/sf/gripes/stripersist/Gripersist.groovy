@@ -22,7 +22,7 @@ class Gripersist extends Stripersist implements Interceptor, ConfigurableCompone
         _logger.info("""
 ##################################################
 # Stripersist Version: ${pkg.getSpecificationVersion()}, Build: ${pkg.getImplementationVersion()}
-# Gripersist Version: 0.1.0
+# Gripersist Version: 0.1.1
 ##################################################""")
     }
 
@@ -39,7 +39,8 @@ class Gripersist extends Stripersist implements Interceptor, ConfigurableCompone
 	        getEntityManager(key)
         } else {
 			_logger.debug "There is only one PersistenceUnit, using that."
-	        getEntityManager(Stripersist.entityManagerFactories.values().iterator().next())
+			_logger.debug "Factories: {}", Stripersist.entityManagerFactories.values().iterator().next()
+	        Stripersist.getEntityManager(Stripersist.entityManagerFactories.values().iterator().next())
 		}
     }
 }

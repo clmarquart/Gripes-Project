@@ -19,9 +19,9 @@ class GripesStripersistInit implements StripersistInit {
 	void init() {
 		logger.info "Gripes Stripersist Initialization."
 		
-/*		String importScript = this.class.classLoader.getResource("import.groovy").text
+		String importScript = this.class.classLoader.getResource("import.groovy").text
 		
 		GroovyShell shell = new GroovyShell()
-		Object value = shell.evaluate(importScript)*/
+		Object value = shell.evaluate(importScript)
 	}
 }

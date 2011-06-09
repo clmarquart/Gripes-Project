@@ -243,11 +243,14 @@ class GripesCreate {
 			download(addon)
 			
 			installScriptResource = getResource("addons/${addon}/gripes.install")
+			logger.info "InstallScript: {}", installScriptResource
 			if(installScriptResource) installScript = installScriptResource.text
+			else installScript = new File("addons/${addon}/gripes.install").text
 		}
 		
-		if(installScript!=""){			
-			new GroovyShell(this.class.classLoader,new Binding([project: project])).evaluate(installScript.text)
+		if(installScript!=""){
+			logger.info "Executing the ${addon} install script"
+			new GroovyShell(this.class.classLoader,new Binding([project: project])).evaluate(installScript)
 		}
 		
 		def gripesConfigFile = new File("resources/Config.groovy")
