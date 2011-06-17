@@ -21,8 +21,18 @@ sourceSets {
 	}	
 }
 
+configurations {
+	ftpAntTask
+}
 
-dependencies {	
+dependencies {
+	//** Ant FTP
+	ftpAntTask module("org.apache.ant:ant-commons-net:1.7.0") {
+	    module("commons-net:commons-net:1.4.1") {
+	        dependencies("oro:oro:2.0.8@jar")
+	    }
+	}
+	
 	//** Groovy
 	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'
 	
@@ -56,10 +66,24 @@ uploadArchives {
     }
 }
 uploadArchives.doLast {
-	ant {
+/*	ant {
 		copy(todir:buildDir.canonicalPath+"/"+libsDirName) {
 	    	fileset(dir:buildDir.canonicalPath, includes:"ivy.xml")
 		}
 		delete(file: buildDir.canonicalPath+"/ivy.xml")
+    }*/
+	ant {
+		taskdef(name: 'ftp',
+                classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
+                classpath: configurations.ftpAntTask.asPath)
+
+		ftp(action: "put",
+			server: "www.gripes-project.org", 
+			remotedir: "${ftpUploadRoot}/libs/gripes/gripersist/${version}",
+			chmod: "0755",
+			userid: ftpUploadUser,
+			password: ftpUploadPassword) {
+			fileset(dir:"repos", includes: "*.*")
+		}
     }
 }

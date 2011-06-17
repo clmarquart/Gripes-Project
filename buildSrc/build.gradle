@@ -9,7 +9,7 @@ logger.quiet "Building the Gripes Plugin"
 
 group = 'gripes'
 archivesBaseName = 'gripes-plugin'
-version = '0.1.4'
+version = '0.1.5'
 libsDirName = "libs/${group}/${archivesBaseName}/${version}"
 
 repositories {
@@ -26,10 +26,21 @@ sourceSets {
 	}	
 }
 
+configurations {
+	ftpAntTask
+}
+
 dependencies {	
 	//** Gradle API
 	compile gradleApi()
 	
+	//** Ant FTP
+	ftpAntTask module("org.apache.ant:ant-commons-net:1.7.0") {
+        module("commons-net:commons-net:1.4.1") {
+            dependencies("oro:oro:2.0.8@jar")
+        }
+    }
+    
 	//** Groovy
 	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'
 	
@@ -44,10 +55,6 @@ dependencies {
 	
 	//** Database
 	compile group: 'org.hsqldb', 		name: 'hsqldb', 		version: '2.0.0'
-/*	compile group: 'org.hibernate', name: 'hibernate-core', version: '3.3.2.GA'
-	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.4.0.GA'
-	compile group: 'org.hibernate', name: 'hibernate-annotations', version: '3.4.0.GA'
-	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '3.3.2.GA'*/
 	
 	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Alpha3'
 	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.4.0.GA'
@@ -57,16 +64,17 @@ dependencies {
 	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	
 	compile group: 'gripes', name: 'gripersist', version: '0.1.0'
-	compile group: 'gripes', name: 'gripes-web', version: '0.1.4'
+	compile group: 'gripes', name: 'gripes-web', version: '0.1.5'
 	
-	archives group: 'org.hsqldb', 		name: 'hsqldb', 		version: '2.0.0'
-	archives group: 'org.hibernate', name: 'hibernate-core', version: '3.3.2.GA'
+	archives group: 'org.hsqldb', 		name: 'hsqldb', 		version: '2.0.0'	
+	archives group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Alpha3'
 	archives group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.4.0.GA'
-	archives group: 'org.hibernate', name: 'hibernate-annotations', version: '3.4.0.GA'
-	archives group: 'org.hibernate', name: 'hibernate-c3p0', version: '3.3.2.GA'
+	archives group: 'org.hibernate', name: 'hibernate-annotations', version: '3.5.6-Final'
+	archives group: 'org.hibernate', name: 'hibernate-c3p0', version: '3.6.4.Final'
+	
 	archives group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	
-	archives group: 'gripes', name:'gripes-web', version: '0.1.4'
+	archives group: 'gripes', name:'gripes-web', version: '0.1.5'
 }
 
 uploadArchives {
@@ -76,9 +84,17 @@ uploadArchives {
 }
 uploadArchives.doLast {
 	ant {
-		copy(todir:buildDir.canonicalPath+"/"+libsDirName) {
-	    	fileset(dir:buildDir.canonicalPath, includes:"ivy.xml")
+		taskdef(name: 'ftp',
+                classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
+                classpath: configurations.ftpAntTask.asPath)
+		
+		ftp(action: "put",
+			server: "www.gripes-project.org", 
+			remotedir: "${ftpUploadRoot}/libs/gripes/gripes-plugin/${version}",
+			chmod: "0755",
+			userid: ftpUploadUser,
+			password: ftpUploadPassword) {
+			fileset(dir:"repos", includes: "*.*")
 		}
-		delete(file: buildDir.canonicalPath+"/ivy.xml")
     }
 }

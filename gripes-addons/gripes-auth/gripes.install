@@ -35,10 +35,12 @@ import PACKAGE.Role
 	"model/User.groovy",
 	"model/Role.groovy"
 ].each {
+	def file = new File("gripes-addons/gripes-auth/src/main/resources/templates/${it}")
+	def res  = this.class.classLoader.getResource("templates/${it}")
+	def text = (file.exists())?file.text:(res)?res.text:""
 	GripesUtil.saveFile(
 		new File(GripesUtil.getBasePackage(project)+"/${it}"),
-		new File("gripes-addons/gripes-auth/src/main/resources/templates/${it}").text
-			.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
+		text.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
 			.replaceAll("PKG","PACKAGE")
 	)
 }

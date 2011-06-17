@@ -4,7 +4,7 @@
 		module="gripes-addons/gripes-auth"
 		revision="0.1.0"
 		status="integration"
-		publication="20110606215229"
+		publication="20110616224628"
 	/>
 	<configurations>
 		<conf name="archives" visibility="public" description="Configuration for the default artifacts."/>
@@ -24,7 +24,7 @@
 		<dependency org="net.sourceforge.stripes" name="stripes" rev="1.5.6" conf="compile->default"/>
 		<dependency org="" name="stripesstuff" rev="0.1" conf="compile->default"/>
 		<dependency org="gripes" name="gripes-plugin" rev="0.1.4" conf="compile->default"/>
-		<dependency org="gripes" name="gripes-web" rev="0.1.4" conf="compile->default"/>
+		<dependency org="gripes" name="gripes-web" rev="0.1.5" conf="compile->default"/>
 		<dependency org="javax.persistence" name="persistence-api" rev="1.0" conf="compile->default"/>
 		<dependency org="" name="stripersist" rev="1.0.3" conf="compile->default"/>
 		<dependency org="org.codehaus.groovy" name="groovy" rev="1.7.10" conf="groovy->default"/>

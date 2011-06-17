@@ -24,8 +24,12 @@ dependencies {
 	
 	compile name: 'stripersist', version: '1.0.3'
 	compile name: 'stripesstuff', version: '0.1'
-/*	compile group: 'gripes', name: 'gripes-web', version: '0.1.4'*/
-	compile project(':gripes-web')
+	
+	compile group: 'gripes', name: 'gripersist', version: '0.1.0'
+	compile group: 'gripes', name: 'gripes-web', version: '0.1.5'
+	
+	/** Gripes Addons
+	compile fileTree(dir: 'addons', includes: ['**/bin/*.jar'])
 }
 
 repositories {
@@ -46,7 +50,7 @@ sourceSets {
         }
     }
 }
-
+/*
 run.doFirst {
 	def gripesConfig = new ConfigSlurper().parse(new File("resources/Config.groovy").text)
 	gripesConfig.addons.each{
@@ -64,3 +68,4 @@ run.doLast {
 		)
 	}
 }
+*/

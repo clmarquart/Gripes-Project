@@ -49,9 +49,12 @@ uploadArchives {
 }
 uploadArchives.doLast {
 	ant {
-/*		copy(todir:libsDirName) {
+		/*		
+		copy(todir:libsDirName) {
 	    	fileset(dir:".", includes:"gripes.*")
-		}*/
+		}
+		*/
+		
 		copy(file:"${buildDir}/bin/${archivesBaseName}-${version}.jar", tofile: "${libsDirName}/${archivesBaseName}.jar")
 		
 		/*

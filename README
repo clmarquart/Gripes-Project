@@ -2,7 +2,7 @@ Getting Started
 
 1. Download and Install Gradle
 2. Create folder for new app (i.e. ~/Sites/GripesApp)
-3. Create new file: 'build.gradle', with contents found here
+3. Create new file: 'build.gradle', with contents from http://www.gripes-project.org/build.gradle.txt
 4. Run: 'gradle init'
 5. Gripes will update your build.gradle file, edit the gripes{} section accordingly
 6. Run: 'gradle setup'
