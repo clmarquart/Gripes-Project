@@ -1,3 +1,22 @@
+apply plugin: 'java'
+apply plugin: 'jetty'
+
+gripes {
+	appName = "Gripes Application"
+	server = [
+		contextPath : "/gripes",
+		webAppSourceDirectory : file("web"),
+		httpPort : 8888,
+		stopPort : 8889,
+		stopKey  : "stopJetty",
+		scanIntervalSeconds : 1,
+		scanTargets : [file("build/classes/main")]
+	]
+	src = "/src"
+	resources = "/resources"
+	packageBase = "com.acme"
+}
+
 dependencies {
 	//** Groovy
 	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'

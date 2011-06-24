@@ -1,6 +1,8 @@
 apply plugin: 'groovy'
 apply plugin: GripesPlugin
 
+if(file("conf/gripes-basic.gradle").exists()) apply from: "conf/gripes-basic.gradle"
+
 buildscript {
     repositories {
 		mavenCentral()

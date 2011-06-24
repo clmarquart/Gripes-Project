@@ -52,10 +52,12 @@ class GripesCreate {
 			}
 		}
 
+		/*		
 		def buildScript = new File("build.gradle")
 		def buildLines = buildScript.readLines()
 		buildLines.add(getResource("conf/build-additions.template").text)
 		buildScript.setText(buildLines.join("\n"))
+		*/
 	}
 	
 	/**
