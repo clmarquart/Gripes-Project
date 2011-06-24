@@ -14,5 +14,6 @@ cache.bin
 /addons/*
 
 /build/
+.eprj
 
 !/gripes-addons

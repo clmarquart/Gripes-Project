@@ -25,7 +25,8 @@ dependencies {
 	//** Framework
 	compile group: 'net.sourceforge.stripes', name: 'stripes', version: '1.5.6'
 	compile name: 'stripesstuff', version: '0.1'
-	compile group: 'gripes', name: 'gripes-plugin', version: '0.1.4'
+	compile group: 'gripes', name: 'gripes-plugin', version: '0.1.5'
+	
 /*	compile group: 'gripes', name: 'gripes-web', version: '0.1.4'*/
 	compile project(':gripes-web')
 	

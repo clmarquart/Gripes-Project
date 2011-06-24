@@ -48,15 +48,17 @@ dependencies {
 	compile group: 'net.sourceforge.stripes', name: 'stripes', version: '1.5.6'
 	
 	//** Database
-	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Alpha3'
-	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.4.0.GA'
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.Beta2'
 	compile group: 'org.hibernate', name: 'hibernate-annotations', version: '3.5.6-Final'
+	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
+	
 	compile group: 'org.hibernate', name: 'ejb3-persistence', version: '3.3.2.Beta1'
-	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '3.6.4.Final'
 	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	
 /*	compile name: 'stripersist', version: '1.0.3'*/
 	compile project(":gripersist")
+	
 	compile name: 'stripesstuff', version: '0.1'
 }
 

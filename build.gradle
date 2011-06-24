@@ -5,48 +5,15 @@ buildscript {
     repositories {
 		mavenCentral()
 	    mavenRepo urls: "http://www.gripes-project.org/libs"
-		
-		/*
-		add(new org.apache.ivy.plugins.resolver.FileSystemResolver()) {
-	        name = 'repo'
-	        addIvyPattern "/Users/cody/Development/workspaces/mate/gripes-plugin/build/ivy.xml"
-	        addArtifactPattern "/Users/cody/Development/workspaces/mate/gripes-plugin/build/libs/[organisation]/[module]/[revision]/[module]-[revision].[ext]"
-	        descriptor = 'optional'
-	        checkmodified = true
-	    }
-	    add(new org.apache.ivy.plugins.resolver.URLResolver()) { 
-	        name = 'gripes-repo' 
-	        addIvyPattern "http://www.gripes-project.org/libs/[organisation]/[module]/[revision]/ivy-[revision].xml"
-			addArtifactPattern "http://www.gripes-project.org/libs/[organisation]/[module]/[revision]/[module]-[revision].[ext]"
-	        descriptor = 'optional'
-	        checkmodified = true
-		}	
-		*/
+	    mavenRepo name: "jboss-snapshots", urls: "http://snapshots.jboss.org/maven2/"
+	    mavenRepo name: "jboss-public", urls: "https://repository.jboss.org/nexus/content/groups/public/"
+	    mavenRepo name: "atlassian", urls: "https://maven.atlassian.com/content/groups/public/"
     }
     dependencies {
-        classpath group: 'gripes', name: 'gripes-plugin', version: '0.1.4'
-		classpath group: 'gripes', name: 'gripes-web', version: '0.1.4'
-		classpath group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Alpha3'
+        classpath group: 'gripes', name: 'gripes-plugin', version: '0.1.5'
+		classpath group: 'gripes', name: 'gripes-web', version: '0.1.5'
+		classpath group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
+		classpath group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
 		classpath group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	}
-}
-apply plugin: 'java'
-apply plugin: 'jetty'
-
-apply from: 'conf/gripes-basic.gradle'
-
-gripes {
-	appName = "Gripes Application"
-	server = [
-		contextPath : "/gripes",
-		webAppSourceDirectory : file("web"),
-		httpPort : 8888,
-		stopPort : 8889,
-		stopKey  : "stopJetty",
-		scanIntervalSeconds : 1,
-		scanTargets : [file("build/classes/main")]
-	]
-	src = "/src"
-	resources = "/resources"
-	packageBase = "com.acme"
 }

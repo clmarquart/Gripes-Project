@@ -16,6 +16,8 @@ repositories {
     mavenCentral()
     mavenRepo urls: "http://www.gripes-project.org/libs"
     mavenRepo name: "jboss-snapshots", urls: "http://snapshots.jboss.org/maven2/"
+    mavenRepo name: "jboss-public", urls: "https://repository.jboss.org/nexus/content/groups/public/"
+    mavenRepo name: "atlassian", urls: "https://maven.atlassian.com/content/groups/public/"
 }
 
 sourceSets {
@@ -56,21 +58,29 @@ dependencies {
 	//** Database
 	compile group: 'org.hsqldb', 		name: 'hsqldb', 		version: '2.0.0'
 	
-	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Alpha3'
-	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.4.0.GA'
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.Beta2'
 	compile group: 'org.hibernate', name: 'hibernate-annotations', version: '3.5.6-Final'
-	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '3.6.4.Final'
+	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
 	
 	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	
-	compile group: 'gripes', name: 'gripersist', version: '0.1.0'
+	
+	compile group: 'gripes', name: 'gripersist', version: '0.1.1'
 	compile group: 'gripes', name: 'gripes-web', version: '0.1.5'
 	
+	/*
+	compile project(":gripersist")
+	compile project(":gripes-web")
+	*/
+	
+	//** For archiving
 	archives group: 'org.hsqldb', 		name: 'hsqldb', 		version: '2.0.0'	
-	archives group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Alpha3'
-	archives group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.4.0.GA'
+	
+	archives group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
+	archives group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.Beta2'
 	archives group: 'org.hibernate', name: 'hibernate-annotations', version: '3.5.6-Final'
-	archives group: 'org.hibernate', name: 'hibernate-c3p0', version: '3.6.4.Final'
+	archives group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
 	
 	archives group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	

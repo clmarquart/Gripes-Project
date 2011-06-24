@@ -38,19 +38,30 @@ dependencies {
 	
 	//** Servlet
 	compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
-/*	compile group: 'org.mortbay.jetty', name: 'jetty', version: '6.1.26'
-	compile group: 'javax.servlet', name: 'jsp-api', version: '2.0'*/
+	/*	
+	compile group: 'org.mortbay.jetty', name: 'jetty', version: '6.1.26'
+	compile group: 'javax.servlet', name: 'jsp-api', version: '2.0'
+	*/
 
-		//** Framework
+	//** Framework
 	compile group: 'net.sourceforge.stripes', name: 'stripes', version: '1.5.6'
 	
 	//** Database
-/*	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Alpha3'
+	/*	
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Alpha3'
 	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '3.4.0.GA'
 	compile group: 'org.hibernate', name: 'hibernate-annotations', version: '3.5.6-Final'
 	compile group: 'org.hibernate', name: 'ejb3-persistence', version: '3.3.2.Beta1'
 	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '3.6.4.Final'
-			*/
+	*/
+	
+/*	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Alpha3'*/
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.Beta2'
+	compile group: 'org.hibernate', name: 'hibernate-annotations', version: '3.5.6-Final'
+	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
+	
+	compile group: 'org.hibernate', name: 'ejb3-persistence', version: '3.3.2.Beta1'
 	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	
 	//** Logging
@@ -66,12 +77,15 @@ uploadArchives {
     }
 }
 uploadArchives.doLast {
-/*	ant {
+	/*	
+	ant {
 		copy(todir:buildDir.canonicalPath+"/"+libsDirName) {
 	    	fileset(dir:buildDir.canonicalPath, includes:"ivy.xml")
 		}
 		delete(file: buildDir.canonicalPath+"/ivy.xml")
-    }*/
+    }
+    */
+    
 	ant {
 		taskdef(name: 'ftp',
                 classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
