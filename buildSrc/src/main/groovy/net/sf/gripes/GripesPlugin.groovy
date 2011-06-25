@@ -5,12 +5,17 @@ import org.gradle.api.Plugin
 import org.gradle.api.tasks.SourceSet
 import javax.persistence.Column
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 /**
  * This is the heart of creating a Gripes application.
  * 
  * Creates the following tasks: init, setup, create, run, stop, and delete
  */
 class GripesPlugin implements Plugin<Project> {
+	Logger logger = LoggerFactory.getLogger(GripesPlugin.class)
+	
 	String root
 	String basePackage
 	String tmpDir
@@ -19,13 +24,11 @@ class GripesPlugin implements Plugin<Project> {
 	
 	/**
 	 * Create the tasks for the plugin
+	 *
+	 * TODO Make sure that 'init' is called, then 'setup' before other tasks
 	 */
 	def void apply(Project project) {
         project.convention.plugins.gripes = new GripesPluginConvention()
-
-		project.beforeEvaluate {
-			println "BEFORE"
-		}
 
 		def deleteTask = project.task('delete') << {
 			GripesCreate creator = new GripesCreate([project: project])
@@ -58,8 +61,6 @@ class GripesPlugin implements Plugin<Project> {
 		/**
 		 * Runs the Gripes application using the built-in Gradle Jetty 
 		 * implementation. 
-		 *
-		 * TODO: Stop calling copyWebXml(), web.xml should be created once on `setup`.
 		 */
 		def runTask = project.task('run') << {task->			
 			def jetty = new GripesJetty(project: project)
@@ -73,8 +74,8 @@ class GripesPlugin implements Plugin<Project> {
 			if(configFile.exists()) {
 				def gripesConfig = new ConfigSlurper().parse(configFile.text)
 				gripesConfig.addons.each {
-					println "Adding: gripes-addons/${it}/src/main/groovy to the sourceSet"
-					project.sourceSets.main.groovy.srcDirs += new File("gripes-addons/${it}/src/main/groovy")
+					logger.debug "Adding: gripes-addons/{}/src/main/groovy to the sourceSet", it.replaceAll('-src','')
+					project.sourceSets.main.groovy.srcDirs += new File("gripes-addons/${it.replaceAll('-src','')}/src/main/groovy")
 				}
 			}
 		}

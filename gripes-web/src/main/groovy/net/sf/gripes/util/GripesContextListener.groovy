@@ -42,7 +42,8 @@ class GripesContextListener  implements ServletContextListener {
 		System.setProperty("gripes.temp", tempDir.toString())
 		
 		// TODO need to compensate for the Catalina method of implementing these Filters
-		// BUG addonConfig doesn't compensate for gripes-addons v. addons.
+		// TODO addonConfig doesn't compensate for gripes-addons v. addons.
+		// TODO only use the /gripes-addons/ directory when addon is config'd with "-src"
 		def gripesConfig = new ConfigSlurper().parse(this.class.classLoader.getResource("Config.groovy").text)
 		gripesConfig.addons.each {
 			def addonName = it
@@ -50,8 +51,7 @@ class GripesContextListener  implements ServletContextListener {
 			if(!addonConfig){
 				addonConfig = this.class.classLoader.getResource("gripes/gripes-addons/${addonName}/gripes.addon")
 			}
-			println "ADDON: $addonConfig"
-			println "2: " + this.class.classLoader.getResource("gripes.addon")
+			
 			def addon = new ConfigSlurper().parse(addonConfig)
 			addon.filters.each {k,v ->
 				def filterConfig = v

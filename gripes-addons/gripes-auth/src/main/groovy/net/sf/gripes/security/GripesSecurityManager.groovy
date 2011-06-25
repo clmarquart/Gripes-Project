@@ -21,7 +21,6 @@ class GripesSecurityManager extends InstanceBasedSecurityManager implements Secu
 	
     @Override protected Boolean isUserAuthenticated(ActionBean bean, Method handler) {
 		def user = getUser(bean)
-		println "USER IS: $user"
         user && user.activated
     }
 	

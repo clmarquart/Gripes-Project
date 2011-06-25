@@ -28,8 +28,6 @@ class GripesCreate {
 	/**
 	 * Initializes a directory as a Gripes application.  Creates the folder structure,
 	 * gripes-basic` gradle script, and edits the build.gradle to use gripes-basic
-	 *
-	 * TODO: Remove dependency on editing the main build, at the least, just insert import of gripes-basic
 	 */
 	def init() {
 		logger.info "Initializing Gripes project"
@@ -165,8 +163,6 @@ class GripesCreate {
 	
 	/**
 	 * Creates a JPA Entity model object
-	 * 
-	 * TODO: BaseDao should be created during setup.
 	 */
 	def model(name) {
 		logger.info "Creating {} Model", name
@@ -228,8 +224,10 @@ class GripesCreate {
 	 * Install the specified add-on.  
 	 * 
 	 * TODO Verify use of both source and jar addons, spec. the installer 
+	 * TODO Don't overwrite addon variable, "-src" needs to make it to Config.grovoy
 	 */
 	def install(addon) {
+		def addonName = addon
 		logger.info "Installing the {} add-on.", addon
 		
 		def addonConfig, installScript = "", installScriptFile, installScriptResource
@@ -264,9 +262,9 @@ class GripesCreate {
 		def gripesConfigFile = new File("resources/Config.groovy")
 		def gripesConfig = gripesConfigFile.text
 		if((gripesConfig =~ /addons\s*=\s*\[\]/).find()){
-			gripesConfig = gripesConfig.replaceFirst(/addons\s*=\s*\[\s*\]/,'addons=["'+addon+'"]')
+			gripesConfig = gripesConfig.replaceFirst(/addons\s*=\s*\[\s*\]/,'addons=["'+addonName+'"]')
 		} else {
-			gripesConfig = gripesConfig.replaceFirst(/addons\s*=\s*\[/,'addons=["'+addon+'",')
+			gripesConfig = gripesConfig.replaceFirst(/addons\s*=\s*\[/,'addons=["'+addonName+'",')
 		}
 		gripesConfigFile.text = gripesConfig
 	}

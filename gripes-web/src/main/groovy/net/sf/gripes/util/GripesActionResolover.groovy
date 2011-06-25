@@ -10,11 +10,25 @@ import org.slf4j.LoggerFactory
 class GripesActionResolver extends NameBasedActionResolver {
 	Logger logger = LoggerFactory.getLogger(GripesActionResolver.class)
 	
-	//TODO adding actions on the fly needs to happen from plugin.
+	/**
+	 * TODO adding actions on the fly needs to happen from plugin.
+	 */
 	GripesActionResolver() {
 		logger.info "Initializing Gripes Action Resolver"
 		
-		super.addActionBean(Class.forName("net.sf.gripes.action.GripesLoginActionBean"))
+		def gripesConfig = new ConfigSlurper().parse(this.class.classLoader.getResource("Config.groovy").text)
+		gripesConfig.addons.each {
+			def addonName = it
+			def addonConfig = this.class.classLoader.getResource("gripes/addons/${addonName}/gripes.addon")
+			if(!addonConfig){
+				addonConfig = this.class.classLoader.getResource("gripes/gripes-addons/${addonName}/gripes.addon")
+			}
+			
+			def addon = new ConfigSlurper().parse(addonConfig)
+			addon.actions.each {
+				super.addActionBean(Class.forName(it))
+			}
+		}
 	}
 
 	/**
@@ -27,7 +41,7 @@ class GripesActionResolver extends NameBasedActionResolver {
 	 * The binding suffix should be blank, as we want the URLs to be as clean 
 	 * as possible.  
 	 *
-	 * TODO: BindingSuffix should be configurable, defaulting to blank is fine.ˇ
+	 * TODO: BindingSuffix should be configurable, defaulting to blank is fine.
 	 */
     @Override String getBindingSuffix() { 
 		""
@@ -35,15 +49,15 @@ class GripesActionResolver extends NameBasedActionResolver {
 	
 	@Override void init(config) {
 		super.init(config)
-		
-		println "CONFIG!"
 	}
 	
-/*	@Override ActionBean getActionBean(ActionBeanContext context, String binding) {
+	/*	
+	@Override ActionBean getActionBean(ActionBeanContext context, String binding) {
 		def classes = super.getActionBeanClasses()+[Class.forName("net.sf.gripes.action.GripesLoginActionBean")]
 		println "Find $binding in CLASSES ${classes}"
 		classes
-	}*/
+	}
+	*/
 
 	/**
 	 * The url binding should be the same as the Stripes standard (e.g. the Class name

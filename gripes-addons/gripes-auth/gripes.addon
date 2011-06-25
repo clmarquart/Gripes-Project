@@ -6,3 +6,7 @@ filters {
 		]
 	}
 }
+
+actions = [
+	"net.sf.gripes.action.GripesLoginActionBean"
+]

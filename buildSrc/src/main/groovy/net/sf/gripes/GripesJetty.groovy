@@ -91,8 +91,7 @@ class GripesJetty {
 		
 		gripesConfig.addons.each {
 			try {
-				def addonDir = (new File("addons/${it}").exists())?(new File("addons/${it}")):(new File("gripes-addons/${it}"))
-				
+				def addonDir = ((it=~/-src$/).find())?(new File("gripes-addons/${it.replaceFirst('-src','')}")):(new File("addons/${it}"))
 				ant.copy(
 					file: addonDir.canonicalPath+"/gripes.addon",
 					tofile: project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/gripes/gripes-addons/${it}/gripes.addon"
