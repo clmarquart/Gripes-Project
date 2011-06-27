@@ -11,7 +11,7 @@ class GripesActionResolver extends NameBasedActionResolver {
 	Logger logger = LoggerFactory.getLogger(GripesActionResolver.class)
 	
 	/**
-	 * TODO adding actions on the fly needs to happen from plugin.
+	 * 
 	 */
 	GripesActionResolver() {
 		logger.info "Initializing Gripes Action Resolver"
@@ -32,16 +32,10 @@ class GripesActionResolver extends NameBasedActionResolver {
 	}
 
 	/**
-	 * There is no use for this method at this time.  Leaving this hear to help
-	 * remember in case it is needed.
-	 */
-	//@Override Set<String> getBasePackages() { return Literal.set("ui", "client"); }
-
-	/**
 	 * The binding suffix should be blank, as we want the URLs to be as clean 
 	 * as possible.  
 	 *
-	 * TODO: BindingSuffix should be configurable, defaulting to blank is fine.
+	 * TODO: BindingSuffix should be configurable, defaulting to blank is fine. { 'suffix' : '.action' }
 	 */
     @Override String getBindingSuffix() { 
 		""
@@ -50,21 +44,13 @@ class GripesActionResolver extends NameBasedActionResolver {
 	@Override void init(config) {
 		super.init(config)
 	}
-	
-	/*	
-	@Override ActionBean getActionBean(ActionBeanContext context, String binding) {
-		def classes = super.getActionBeanClasses()+[Class.forName("net.sf.gripes.action.GripesLoginActionBean")]
-		println "Find $binding in CLASSES ${classes}"
-		classes
-	}
-	*/
 
 	/**
 	 * The url binding should be the same as the Stripes standard (e.g. the Class name
-	 * less 'ActionBean'), just made lowercase. This is still overridden using the
-	 * @UrlBinding annotation
+	 * less 'ActionBean'), just made lowercase. This is still overridden when using the
+	 * @UrlBinding annotation in an ActionBean
 	 *
-	 * TODO: UrlBinding should be centrally configured
+	 * TODO: Can the UrlBinding be configured: { 'com.acme.action.PageActionBean' : '/Page' }
 	 */
 	@Override String getUrlBinding(String className) {
 		String binding = super.getUrlBinding(className)
@@ -73,4 +59,19 @@ class GripesActionResolver extends NameBasedActionResolver {
 		
 		binding.toLowerCase()
 	}
+
+
+	/**
+	 * There is no use for these methods at this time.  Leaving this hear to help
+	 * remember in case they're needed.
+	 */	
+	/*	
+	@Override Set<String> getBasePackages() { return Literal.set("ui", "client"); }
+
+	@Override ActionBean getActionBean(ActionBeanContext context, String binding) {
+		def classes = super.getActionBeanClasses()+[Class.forName("net.sf.gripes.action.GripesLoginActionBean")]
+		println "Find $binding in CLASSES ${classes}"
+		classes
+	}
+	*/
 }

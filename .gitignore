@@ -12,7 +12,8 @@ gripes-web/repos/*
 cache.bin
 /addons2/*
 /addons/*
-
+gripes-addons/**/bin
+**/repos
 /build/
 .eprj
 

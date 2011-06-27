@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory
  * This is the heart of creating a Gripes application.
  * 
  * Creates the following tasks: init, setup, create, run, stop, and delete
+ * 
+ * TODO hook into War task to ensure correct packaging	
+ * TODO Create GripesException class for handling sequence errors
  */
 class GripesPlugin implements Plugin<Project> {
 	Logger logger = LoggerFactory.getLogger(GripesPlugin.class)
@@ -24,8 +27,6 @@ class GripesPlugin implements Plugin<Project> {
 	
 	/**
 	 * Create the tasks for the plugin
-	 *
-	 * TODO Make sure that 'init' is called, then 'setup' before other tasks
 	 */
 	def void apply(Project project) {
         project.convention.plugins.gripes = new GripesPluginConvention()
@@ -41,11 +42,20 @@ class GripesPlugin implements Plugin<Project> {
 		}
 		
 		def setupTask = project.task('setup') << {
-			GripesCreate creator = new GripesCreate([project: project])
-			creator.setup()
+			if(new File("src").exists()) {
+				GripesCreate creator = new GripesCreate([project: project])
+				creator.setup()
+			} else {
+				logger.error "GripesSequenceError: You must first run `gradle init`."
+				return null
+			}
 		}
 		
-		def createTask = project.task('create') << {			
+		def createTask = project.task('create') << {
+			if(!(new File("resources/Config.groovy").exists())) {
+				logger.error "GripesSequenceError: You must first run `gradle init` and `gradle setup`."
+				return null
+			}
 			GripesCreate creator = new GripesCreate([project: project])
 
 			if(project.hasProperty('model')) {
@@ -62,7 +72,12 @@ class GripesPlugin implements Plugin<Project> {
 		 * Runs the Gripes application using the built-in Gradle Jetty 
 		 * implementation. 
 		 */
-		def runTask = project.task('run') << {task->			
+		def runTask = project.task('run') << {task->
+			if(!(new File("resources/Config.groovy").exists())) {
+				logger.error "GripesSequenceError: You must first run `gradle init` and `gradle setup`."
+				return null
+			}
+						
 			def jetty = new GripesJetty(project: project)
 			
 			jetty.webAppSourceDirectory = new File(project.projectDir.canonicalPath+"/web")
@@ -89,6 +104,11 @@ class GripesPlugin implements Plugin<Project> {
 		
 		
 		def installTask = project.task('install') << {
+			if(!(new File("resources/Config.groovy").exists())) {
+				logger.error "GripesSequenceError: You must first run `gradle init` and `gradle setup`."
+				return null
+			}
+			
 			GripesCreate creator = new GripesCreate([project: project])
 			creator.install(project.properties.addon)
 		}

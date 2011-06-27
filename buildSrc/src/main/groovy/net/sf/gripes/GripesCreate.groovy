@@ -49,13 +49,6 @@ class GripesCreate {
 				}
 			}
 		}
-
-		/*		
-		def buildScript = new File("build.gradle")
-		def buildLines = buildScript.readLines()
-		buildLines.add(getResource("conf/build-additions.template").text)
-		buildScript.setText(buildLines.join("\n"))
-		*/
 	}
 	
 	/**
@@ -139,12 +132,7 @@ class GripesCreate {
 			"dao/base/BaseDao.groovy",
 			"action/base/BaseActionBean.groovy",
 			"util/base/BaseActionBeanContext.groovy",
-			"model/base/BaseModel.groovy",
-/*			"action/UserActionBean.groovy"
-			"dao/UserDao.groovy",
-			"dao/RoleDao.groovy",
-			"model/User.groovy",
-			"model/Role.groovy"*/
+			"model/base/BaseModel.groovy"
 		].each {
 			saveFile(
 				new File(GripesUtil.getBasePackage(project)+"/${it}"),
@@ -224,7 +212,6 @@ class GripesCreate {
 	 * Install the specified add-on.  
 	 * 
 	 * TODO Verify use of both source and jar addons, spec. the installer 
-	 * TODO Don't overwrite addon variable, "-src" needs to make it to Config.grovoy
 	 */
 	def install(addon) {
 		def addonName = addon

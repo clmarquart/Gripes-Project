@@ -21,6 +21,7 @@ class UserActionBean extends GripesActionBean {
 	@Validate(converter=PasswordTypeConverter.class)
 	String password
 	
+	@DefaultHandler
 	@HandlesEvent("signin")  Resolution signin() {
 		def jsp = this.class.classLoader.getResource("jsp/login.jsp")
 		def jspFile = new File(System.getProperty("gripes.temp")+"/jsp/login.jsp")
@@ -33,22 +34,21 @@ class UserActionBean extends GripesActionBean {
 			jspFile.text = jsp.text.replaceAll("PKG",this.class.package.name)
 		}
 		
-		def forwardUrl = jspFile.toString().substring(jspFile.toString().indexOf("/WEB-INF"))
-		new ForwardResolution(forwardUrl)
+		forward jspFile
 	}
 
 	@HandlesEvent("signout")  Resolution signout() {
 		context.setAttribute("gripes.user",null)
-		redirect("/")
+		redirect "/"
 	}
 	
 	@HandlesEvent("authenticate") Resolution login() {
 		def user = User.findByUsername(username)
 		if(user && user.password.equals(password)) {
 			context.setAttribute("gripes.user",user)
-			redirect(loginUrl)
+			redirect loginUrl?:"/"
 		} else {
-			new ForwardResolution("/WEB-INF/work/jsp/login.jsp")
+			forward "/WEB-INF/work/jsp/login.jsp"
 		}
 	}
 }

@@ -11,7 +11,9 @@ import net.sourceforge.stripes.action.ActionBeanContext
 
 import javax.servlet.http.HttpServletRequest;
 
-abstract class GripesActionBean implements ActionBean {
+abstract class GripesActionBean implements ActionBean {	
+	GripesActionBeanContext context
+
 	Resolution forward(String page) {
 		new ForwardResolution("/WEB-INF/jsp/"+this.class.simpleName.replace("ActionBean","")+"/"+page+".jsp")
 	}
@@ -21,7 +23,7 @@ abstract class GripesActionBean implements ActionBean {
 	}
 	
 	Resolution forward(File page) {
-		new ForwardResolution(page)
+		new ForwardResolution(page.canonicalPath.replaceAll(getContext().servletContext.getRealPath("/"),''))
 	}
 	
 	Resolution redirect(String url) {
@@ -46,8 +48,6 @@ abstract class GripesActionBean implements ActionBean {
 		new ForwardResolution("/WEB-INF/errors/401.jsp")
 	}
 	
-	GripesActionBeanContext context
-	
 	void setContext(ActionBeanContext context) { 
 		this.context = (GripesActionBeanContext) context
 	}	
@@ -57,15 +57,15 @@ abstract class GripesActionBean implements ActionBean {
 	}
 	
     String getLastUrl() {
-        HttpServletRequest req = getContext().getRequest()
+        HttpServletRequest req = getContext().request
 		String lastUrl = ""
 		
         String uri = req.getAttribute("javax.servlet.forward.request_uri")
         String path = req.getAttribute("javax.servlet.forward.path_info")
 
         if (uri == null) {
-            uri = req.getRequestURI()
-            path = req.getPathInfo()
+            uri = req.requestURI
+            path = req.pathInfo
         }
 		lastUrl+=uri
 
@@ -75,6 +75,6 @@ abstract class GripesActionBean implements ActionBean {
 		req.getParameterMap().each { k,v ->
 			lastUrl+="${k}=${v[0]?:''}&"
 		}
-		(lastUrl[0..lastUrl.length()-2]).replace(getContext().getRequest().getContextPath(),"")
+		(lastUrl[0..lastUrl.length()-2]).replace(getContext().request.contextPath,"")
     }
 }
