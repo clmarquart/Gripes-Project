@@ -1,7 +1,8 @@
 package net.sf.gripes.util
 
 import net.sourceforge.stripes.action.ActionBeanContext
-import org.stripesstuff.stripersist.*
+/*import org.stripesstuff.stripersist.**/
+import net.sf.gripes.stripersist.Gripersist
 /*import net.sf.gripes.model.GripesUser*/
 
 public class GripesActionBeanContext extends ActionBeanContext {
@@ -22,10 +23,10 @@ public class GripesActionBeanContext extends ActionBeanContext {
 	}
 	
 	def getEntityClasses() {
-		Stripersist.findEntities().findAll{it.isAnnotationPresent(javax.persistence.Entity)}
+		Gripersist.findEntities().findAll{it.isAnnotationPresent(javax.persistence.Entity)}
 	}
 	def getActionableEntities() {
-		def entities = Stripersist.findEntities().findAll{it.isAnnotationPresent(javax.persistence.Entity)}
+		def entities = Gripersist.findEntities().findAll{it.isAnnotationPresent(javax.persistence.Entity)}
 		
 		def actions = []
 		entities.each {

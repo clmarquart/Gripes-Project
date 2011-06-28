@@ -15,7 +15,7 @@ class GripesContextListener  implements ServletContextListener {
 	
 	def context
 	
-	void contextInitialized(ServletContextEvent contextEvent) {
+	@Override void contextInitialized(ServletContextEvent contextEvent) {
 		logger.info "Loading the Gripes Application..."
 		context = contextEvent.getServletContext()
 		
@@ -80,7 +80,7 @@ class GripesContextListener  implements ServletContextListener {
 		}
 	}
 	
-	void contextDestroyed(ServletContextEvent contextEvent) {
+	@Override void contextDestroyed(ServletContextEvent contextEvent) {
 		context = contextEvent.getServletContext()
 		
 		logger.info "Gripes Application Shutdown."

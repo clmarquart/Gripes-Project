@@ -1,7 +1,14 @@
 apply plugin: 'groovy'
+apply plugin: 'war'
 apply plugin: GripesPlugin
 
 if(file("conf/gripes-basic.gradle").exists()) apply from: "conf/gripes-basic.gradle"
+
+war {
+	from 'web'
+	webInf { from 'web/WEB-INF' }
+	destinationDir = file("/usr/local/tomcat6/instances/dev/webapps")
+}
 
 buildscript {
 	repositories {
@@ -16,6 +23,5 @@ buildscript {
 		classpath group: 'gripes', name: 'gripes-web', version: '0.1.5'
 		classpath group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
 		classpath group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
-		classpath group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	}
 }

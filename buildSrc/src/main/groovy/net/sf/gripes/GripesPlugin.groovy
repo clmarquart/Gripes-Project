@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory
  * Creates the following tasks: init, setup, create, run, stop, and delete
  * 
  * TODO hook into War task to ensure correct packaging	
- * TODO Create GripesException class for handling sequence errors
+ * TODO Create GripesException class for handling sequence errorsbu basePackage
  */
 class GripesPlugin implements Plugin<Project> {
 	Logger logger = LoggerFactory.getLogger(GripesPlugin.class)
@@ -111,6 +111,41 @@ class GripesPlugin implements Plugin<Project> {
 			
 			GripesCreate creator = new GripesCreate([project: project])
 			creator.install(project.properties.addon)
+		}
+		
+		/*		
+		*/
+		def warTask = project.getTasks().getByPath("war")
+		warTask.onlyIf {			
+			
+			def tempDir = new File(warTask.getTemporaryDir().canonicalPath+"/classes/META-INF")
+			if(!tempDir.exists()){
+				tempDir.mkdirs()
+			}
+			
+			def dbConfig = new ConfigSlurper().parse(new File('resources/DB.groovy').toURL())			
+			def jpaFile = new File(tempDir.canonicalPath+"/persistence.xml")
+			jpaFile.createNewFile()
+			jpaFile.text = GripesUtil.createJpaFile(dbConfig)
+
+			def webXmlTemplate = getResource("web.xml").text
+			def webXml = new File(warTask.getTemporaryDir().canonicalPath+"/web.xml")
+			webXml.createNewFile()
+			webXml.text = webXmlTemplate
+							.replaceAll("PROJECTNAME",GripesUtil.getSettings(project).appName)
+							.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
+
+			warTask.webInf { 
+				from(warTask.getTemporaryDir().canonicalPath) {
+					exclude('MANIFEST.MF')
+				}
+			}
+							
+			warTask.properties.each {
+				println it
+			}
+				
+			true
 		}
     }
 

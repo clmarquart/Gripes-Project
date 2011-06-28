@@ -15,7 +15,7 @@ abstract class GripesActionBean implements ActionBean {
 	GripesActionBeanContext context
 
 	Resolution forward(String page) {
-		new ForwardResolution("/WEB-INF/jsp/"+this.class.simpleName.replace("ActionBean","")+"/"+page+".jsp")
+		new ForwardResolution("/WEB-INF/jsp/"+this.class.simpleName.replace("ActionBean","").toLowerCase()+"/"+page+".jsp")
 	}
 	
 	Resolution forward(String page, String extension) {

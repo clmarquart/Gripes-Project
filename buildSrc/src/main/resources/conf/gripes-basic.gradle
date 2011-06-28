@@ -17,6 +17,10 @@ gripes {
 	packageBase = "com.acme"
 }
 
+configurations {
+	provided {  }
+}
+
 dependencies {
 	//** Groovy
 	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'
@@ -25,7 +29,9 @@ dependencies {
 	compile group: 'net.sourceforge.stripes', name: 'stripes', version: '1.5.6'
 	
 	//** Servlet
-	compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+	provided group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+	runtime group: 'javax.servlet', name: 'jstl', version: '1.2'
+	runtime group: 'taglibs', name:'standard', version: '1.1.2'
 	
 	//** Logging
 	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
@@ -64,6 +70,7 @@ repositories {
 
 sourceSets {
     main {
+		compileClasspath += configurations.provided
         java {
             srcDir 'src'
         }
@@ -75,6 +82,7 @@ sourceSets {
         }
     }
 }
+
 /*
 run.doFirst {
 	def gripesConfig = new ConfigSlurper().parse(new File("resources/Config.groovy").text)

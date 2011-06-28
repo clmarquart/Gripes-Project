@@ -7,6 +7,10 @@ group = 'gripes'
 archivesBaseName = 'gripes-web'
 version = '0.1.5'
 
+configurations {
+	provided {  }
+}
+
 repositories {
     mavenCentral()
     mavenRepo urls: "http://www.gripes-project.org/libs"
@@ -15,6 +19,7 @@ repositories {
 
 sourceSets {
 	main {
+		compileClasspath += configurations.provided 
 	    java { srcDir 'src/main/java' }
 		groovy { srcDir 'src/main/groovy' }
 	    resources { srcDir 'src/main/resources' }
@@ -27,7 +32,7 @@ configurations {
 
 dependencies {
 	//** Gradle API
-	compile gradleApi()
+	provided gradleApi()
 	
 	//** Ant FTP
 	ftpAntTask module("org.apache.ant:ant-commons-net:1.7.0") {
@@ -40,9 +45,9 @@ dependencies {
 	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'
 	
 	//** Servlet
-	compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
-	compile group: 'org.mortbay.jetty', name: 'jetty', version: '6.1.26'
-	compile group: 'javax.servlet', name: 'jsp-api', version: '2.0'
+	provided group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+	provided group: 'org.mortbay.jetty', name: 'jetty', version: '6.1.26'
+	provided group: 'javax.servlet', name: 'jsp-api', version: '2.0'
 
 	//** Framework
 	compile group: 'net.sourceforge.stripes', name: 'stripes', version: '1.5.6'
@@ -50,13 +55,8 @@ dependencies {
 	//** Database
 	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
 	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.Beta2'
-	compile group: 'org.hibernate', name: 'hibernate-annotations', version: '3.5.6-Final'
 	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
 	
-	compile group: 'org.hibernate', name: 'ejb3-persistence', version: '3.3.2.Beta1'
-	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
-	
-/*	compile name: 'stripersist', version: '1.0.3'*/
 	compile project(":gripersist")
 	
 	compile name: 'stripesstuff', version: '0.1'

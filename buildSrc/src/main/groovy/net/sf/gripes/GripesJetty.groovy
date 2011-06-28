@@ -34,7 +34,7 @@ class GripesJetty {
 		def dbConfig = new ConfigSlurper().parse(new File('resources/DB.groovy').toURL())
 		def gripesConfig = new ConfigSlurper().parse(new File('resources/Config.groovy').toURL())
 		
-		def jpaTemplate = """
+/*		def jpaTemplate = """
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" 
@@ -61,7 +61,7 @@ class GripesJetty {
 								.replaceAll(/\[CLASSES\]/, v.classes.collect{"<class>$it</class>"}.join("\n"))
 			}	
 		}
-		jpaTemplate += "\n</persistence>\n"
+		jpaTemplate += "\n</persistence>\n"*/
 						
 		[
 			new File("build/classes/main/META-INF/"), 
@@ -74,7 +74,7 @@ class GripesJetty {
 		def jpaFile = new File("build/classes/main/META-INF/persistence.xml")
 		jpaFile.createNewFile()
 		jpaFile.deleteOnExit()
-		jpaFile.text = jpaTemplate
+		jpaFile.text = GripesUtil.createJpaFile(dbConfig)
 		
 		
 		[

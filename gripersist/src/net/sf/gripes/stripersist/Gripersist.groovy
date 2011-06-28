@@ -18,6 +18,7 @@ class Gripersist extends Stripersist implements Interceptor, ConfigurableCompone
 	static Logger _logger= LoggerFactory.getLogger(Gripersist.class)
 	
     static {
+			println "COME ON!!!!!!"
         Package pkg = Stripersist.class.getPackage();
         _logger.info("""
 ##################################################
