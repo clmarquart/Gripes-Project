@@ -34,18 +34,16 @@ dependencies {
 	runtime group: 'taglibs', name:'standard', version: '1.1.2'
 	
 	//** Logging
-	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
-	compile group: 'ch.qos.logback', name: 'logback-core', version: '0.9.28'
-	compile group: 'ch.qos.logback', name: 'logback-access', version: '0.9.28'
-	compile group: 'ch.qos.logback', name: 'logback-classic', version: '0.9.28'
+	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.5.11'
+	compile group: 'ch.qos.logback', name: 'logback-core', version: '0.9.19'
+	compile group: 'ch.qos.logback', name: 'logback-access', version: '0.9.19'
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: '0.9.19'
 	
 	//** Database
 	compile group: 'org.hsqldb', name: 'hsqldb', version: '2.0.0'
-	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	
 	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
 	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.Beta2'
-	compile group: 'org.hibernate', name: 'hibernate-annotations', version: '3.5.6-Final'
 	runtime group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
 	
 	compile name: 'stripersist', version: '1.0.3'
