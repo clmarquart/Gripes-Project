@@ -1,6 +1,6 @@
 package PACKAGE.action
 
-import PACKAGE.action.base.BaseActionBean
+import BASEPACKAGE.action.base.BaseActionBean
 import net.sourceforge.stripes.action.Resolution
 import net.sourceforge.stripes.action.DefaultHandler
 import net.sourceforge.stripes.action.HandlesEvent

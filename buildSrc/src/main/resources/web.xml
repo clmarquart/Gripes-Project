@@ -21,7 +21,7 @@
 		</init-param>
 		<init-param>
 			<param-name>ActionResolver.Packages</param-name>
-		 	<param-value>PACKAGE.action</param-value>
+		 	<param-value>ACTIONPACKAGES</param-value>
 		</init-param>
 		<init-param>
 	    <param-name>ActionBeanContext.Class</param-name>

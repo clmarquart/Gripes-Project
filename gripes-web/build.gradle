@@ -23,7 +23,12 @@ sourceSets {
 	    java { srcDir 'src/main/java' }
 		groovy { srcDir 'src/main/groovy' }
 	    resources { srcDir 'src/main/resources' }
-	}	
+	}
+	test {
+	    java { srcDir 'test/main/java' }
+		groovy { srcDir 'test/main/groovy' }
+	    resources { srcDir 'test/main/resources' }
+	}
 }
 
 configurations {
@@ -41,11 +46,17 @@ dependencies {
         }
     }
 	
+	//** Logging
+	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.5.11'
+	compile group: 'ch.qos.logback', name: 'logback-core', version: '0.9.19'
+	compile group: 'ch.qos.logback', name: 'logback-access', version: '0.9.19'
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: '0.9.19'
+	
 	//** Groovy
 	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'
 	
 	//** Servlet
-	provided group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+	testCompile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
 	provided group: 'org.mortbay.jetty', name: 'jetty', version: '6.1.26'
 	provided group: 'javax.servlet', name: 'jsp-api', version: '2.0'
 
@@ -53,15 +64,19 @@ dependencies {
 	compile group: 'net.sourceforge.stripes', name: 'stripes', version: '1.5.6'
 	
 	//** Database
+	testCompile group: 'org.hsqldb', name: 'hsqldb', version: '2.0.0'
 	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
 	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.Beta2'
 	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
+	
+	//** Testing
+	testCompile group: 'junit', name: 'junit', version: '4.8.2'
+
 	
 	compile project(":gripersist")
 	
 	compile name: 'stripesstuff', version: '0.1'
 }
-
 
 uploadArchives {
     repositories {
@@ -69,14 +84,6 @@ uploadArchives {
     }
 }
 uploadArchives.doLast {
-/*
-	ant {
-		copy(todir:buildDir.canonicalPath+"/"+libsDirName) {
-	    	fileset(dir:buildDir.canonicalPath, includes:"ivy.xml")
-		}
-		delete(file: buildDir.canonicalPath+"/ivy.xml")
-    }
-*/
 	ant {
 		taskdef(name: 'ftp',
                 classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',

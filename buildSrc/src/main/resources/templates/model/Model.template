@@ -1,6 +1,6 @@
 package PACKAGE.model
 
-import PACKAGE.model.base.BaseModel
+import BASEPACKAGE.model.base.BaseModel
 
 import javax.persistence.Entity;
 

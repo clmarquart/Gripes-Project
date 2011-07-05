@@ -39,7 +39,7 @@ class GripesCreate {
 			}
 		}
 		
-		['conf/gripes-basic.gradle'].each {
+		['conf/gripes-basic.gradle','conf/gripes.properties'].each {
 			def newFile = new File("${it}")
 			if(!newFile.exists()) {
 				newFile.createNewFile()
@@ -151,31 +151,39 @@ class GripesCreate {
 	
 	/**
 	 * Creates a JPA Entity model object
+	 * 
+	 * TODO Check for packageBase from command line, then use default
+	 * TODO Fix GripesUtil call to get pkg folder, need to use cmd line
 	 */
-	def model(name) {
-		logger.info "Creating {} Model", name
+	def model(name, pkg) {
+		logger.info "Creating {} Model in Package: {}", name, pkg
+/*		GripesUtil.getSettings(project).packageBase = pkg?:GripesUtil.getSettings(project).packageBase*/
 		
 		def file, template
 
 		template = getResource("templates/model/Model.template").text
 						.replaceAll("MODEL",name)	
-						.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
-		file = new File(GripesUtil.getBasePackage(project)+"/model/${name}.groovy")
+						.replaceAll("BASEPACKAGE",GripesUtil.getSettings(project).packageBase)
+						.replaceAll("PACKAGE",pkg?:GripesUtil.getSettings(project).packageBase)
+		file = new File(GripesUtil.packageToDir(project,pkg?:GripesUtil.getSettings(project).packageBase)+"/model/${name}.groovy")
 		saveFile(file, template)
 		
 		template = getResource("templates/dao/Dao.template").text
 						.replaceAll("MODEL",name)
-						.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
-		file = new File(GripesUtil.getBasePackage(project)+"/dao/${name}Dao.groovy")
-		
+						.replaceAll("BASEPACKAGE",GripesUtil.getSettings(project).packageBase)
+						.replaceAll("PACKAGE",pkg?:GripesUtil.getSettings(project).packageBase)
+		file = new File(GripesUtil.packageToDir(project,pkg?:GripesUtil.getSettings(project).packageBase)+"/dao/${name}Dao.groovy")		
 		saveFile(file,template)
 	}
 	
 	/**
 	 * Creates a Stripes ActionBean for a previously created Model
+	 *
+	 * TODO Check for packageBase from command line, then use default
 	 */
-	def action(name) {
-		logger.info "Creating {} ActionBean", name
+	def action(name, pkg) {
+		logger.info "Creating {} ActionBean in Package: {}", name, pkg
+/*		GripesUtil.getSettings(project).packageBase = pkg?:GripesUtil.getSettings(project).packageBase*/
 		
 		def file, template
 		
@@ -183,29 +191,44 @@ class GripesCreate {
 						.replaceAll("MODELL",name.toLowerCase())
 						.replaceAll("MODEL_FIELD",name+" "+name.toLowerCase())
 						.replaceAll("MODEL",name)
-						.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
+						.replaceAll("BASEPACKAGE",GripesUtil.getSettings(project).packageBase)
+						.replaceAll("PACKAGE",pkg?:GripesUtil.getSettings(project).packageBase)
 						
-		file = new File(GripesUtil.getBasePackage(project)+"/action/${name}ActionBean.groovy")
+		file = new File(GripesUtil.packageToDir(project,pkg?:GripesUtil.getSettings(project).packageBase)+"/action/${name}ActionBean.groovy")
 		saveFile(file, template)
+		
+		
+		def gripesProps = new Properties()
+		new File("conf/gripes.properties").withInputStream { 
+		  stream -> gripesProps.load(stream) 
+		}
+		
+		if(gripesProps["actions"] && (gripesProps["actions"].indexOf("${pkg}.action") < 0))
+			gripesProps["actions"] = (gripesProps['actions']+","+pkg+".action")
+		else if (!gripesProps["actions"])
+			gripesProps["actions"] = pkg+".action"
+			
+		gripesProps.store(new FileOutputStream(new File("conf/gripes.properties")), null)
 		
 		urlLoader = (URLClassLoader) this.class.classLoader
 		urlLoader.addURL(new File("build/classes/main/").toURL())
 		urlLoader.addURL(new File("gripes-web/build/classes/main/").toURL())
 		
-		createViews(name, urlLoader.findClass("${GripesUtil.getSettings(project).packageBase}.model.${name}"))	
+		createViews(name, urlLoader.findClass("${pkg?:GripesUtil.getSettings(project).packageBase}.model.${name}"), pkg)	
 	}
 	
 	/**
 	 * Creates the views for an ActionBean.  Can be called directly if the views need
 	 * to be recreated.
 	 */
-	def views(name) {
-		logger.info "Creating Views for the {}ActionBean", name
+	def views(name,pkg) {
+		logger.info "Creating Views for the {}ActionBean in Package: {}", name, pkg
+		GripesUtil.getSettings(project).packageBase = pkg?:GripesUtil.getSettings(project).packageBase
 		
 		urlLoader = (URLClassLoader) this.class.classLoader
 		urlLoader.addURL(new File("build/classes/main/").toURL())				
 		
-		createViews(name, urlLoader.findClass("${GripesUtil.getSettings(project).packageBase}.model.${name}"))
+		createViews(name, urlLoader.findClass("${GripesUtil.getSettings(project).packageBase}.model.${name}"), pkg)
 	}
 	
 	/**
@@ -297,7 +320,7 @@ class GripesCreate {
 		}
 	}
 
-	private def createViews(action, model) {
+	private def createViews(action, model,pkg) {
 		def fields = model.declaredFields.findAll { !it.isSynthetic() } // && it.getAnnotation(Column.class) }
 
 		[new File(GripesUtil.getRoot(project)+"/web/WEB-INF/jsp/${action.toLowerCase()}")].each{
@@ -319,7 +342,7 @@ class GripesCreate {
 								*/
 			}			
 			file.createNewFile()
-			file.text =  createJspTemplate(model,newContents,"list,create","View")
+			file.text =  createJspTemplate(model,newContents,"list,create","View", pkg)
 		}
 		["edit","create"].each {
 			def file = new File(jspdir.canonicalPath+"/${it}.jsp")
@@ -333,7 +356,7 @@ class GripesCreate {
 								.replace("INPUT",createInputField(model,it))
 			}
 			newContents =  """
-	<stripes:form beanclass="${GripesUtil.getSettings(project).packageBase}.action.${model.simpleName}ActionBean">
+	<stripes:form beanclass="${pkg?:GripesUtil.getSettings(project).packageBase}.action.${model.simpleName}ActionBean">
 		${newContents}
 """			
 			newContents+= '<stripes:hidden name="'+model.simpleName.toLowerCase()+'" value="${bean.'+model.simpleName.toLowerCase()+'.id}" />'
@@ -342,7 +365,7 @@ class GripesCreate {
 	</stripes:form>
 """			
 			file.createNewFile()
-			file.text =  createJspTemplate(model,newContents,"list",it)
+			file.text =  createJspTemplate(model,newContents,"list",it, pkg)
 		}
 		["list"].each {
 			def newContents = ""
@@ -354,7 +377,7 @@ class GripesCreate {
 							.replace("BEANLIST",'${'+"requestScope['list']"+'}')
 							.replace("LISTHEADER",getTableHeader(fields))
 							.replace("LISTENTRY",getTableRow(fields,model))
-			def layout = createJspTemplate(model,newContents,"create","List")
+			def layout = createJspTemplate(model,newContents,"create","List", pkg)
 			file.createNewFile()
 			file.text = layout
 		}
@@ -398,10 +421,10 @@ class GripesCreate {
 		html
 	}
 	
-	private def createJspTemplate(model,newContents,adminBar,action) {
+	private def createJspTemplate(model,newContents,adminBar,action,pkg) {
 		def str = """
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
-<stripes:useActionBean id="bean" beanclass="${GripesUtil.getSettings(project).packageBase}.action.${model.simpleName}ActionBean"/>
+<stripes:useActionBean id="bean" beanclass="${pkg?:GripesUtil.getSettings(project).packageBase}.action.${model.simpleName}ActionBean"/>
 <stripes:layout-render name='../layout/main.jsp' pageTitle='${model.simpleName} ${action}'>
 """
 		str +=  '\t<stripes:layout-component name="adminBar">\n'

@@ -20,7 +20,7 @@ class GripesContextListener  implements ServletContextListener {
 		context = contextEvent.getServletContext()
 		
 		def pack = context.getInitParameter("GripesPackage")+".model"
-		(new File(this.class.classLoader.getResource(pack.replace(".","/")).getFile())).listFiles().each{
+/*		(new File(this.class.classLoader.getResource(pack.replace(".","/")).getFile())).listFiles().each{
 			if(it.isFile()) {
 				def klass = Class.forName(pack.replace("/",".")+"."+it.name.replace(".class",""))
 				if(klass && klass.getAnnotation(javax.persistence.Entity)){
@@ -29,7 +29,7 @@ class GripesContextListener  implements ServletContextListener {
 					}
 				}
 			}
-		}
+		}*/
 		
 		def tempStr
 		try { tempStr = context.TEMPDIR } 

@@ -1,5 +1,8 @@
 package net.sf.gripes
 
+import net.sourceforge.stripes.util.*
+import net.sourceforge.stripes.action.*
+
 class GripesJetty {
 	def project
 	def webXml
@@ -11,7 +14,9 @@ class GripesJetty {
 	def scanIntervalSeconds = 1
 	def scanTargets
 	
-	
+	/*
+	 * TODO allow actions from different packages. 
+	 */
 	def start(config) {
 		[
 			"webXml",
@@ -119,12 +124,21 @@ class GripesJetty {
 				e.printStackTrace()
 			}
 		}
+		
+		// TODO Create a list of actions for Action.Packages in the web.xml
+/*		def gripesProps = new ConfigSlurper().parse(new File('conf/gripes.groovy').toURL())
+		def actionClasses = gripesProps.actions.join(",")*/
+		def gripesProps = new Properties()
+		new File("conf/gripes.properties").withInputStream { 
+		  stream -> gripesProps.load(stream) 
+		}
 
 		def webXmlTemplate = getResource("web.xml").text
 		def webXml = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/web.xml")
 		webXml.createNewFile()
 		webXml.deleteOnExit()
 		webXml.text = webXmlTemplate
+						.replaceAll("ACTIONPACKAGES", gripesProps["actions"])
 						.replaceAll("PROJECTNAME",GripesUtil.getSettings(project).appName)
 						.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
 						
@@ -137,7 +151,7 @@ class GripesJetty {
 		// template, with the proper configuration
 		// createPersistenceXml()
 		
-		project.jettyRun.execute()
+/*		project.jettyRun.execute()*/
 	}
 	
 	def stop() {

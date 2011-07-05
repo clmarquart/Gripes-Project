@@ -1,6 +1,6 @@
 package PACKAGE.dao
 
-import PACKAGE.dao.base.BaseDao
+import BASEPACKAGE.dao.base.BaseDao
 import PACKAGE.model.MODEL
 
 class MODELDao extends BaseDao<MODEL,Long> {

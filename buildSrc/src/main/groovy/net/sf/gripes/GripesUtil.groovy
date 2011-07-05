@@ -23,6 +23,10 @@ class GripesUtil {
 		this.getRoot(project)+this.getSettings(project).src+"/"+this.getSettings(project).packageBase.replace(".","/")
 	}
 	
+	static def packageToDir(project, pkg) {
+		this.getRoot(project)+this.getSettings(project).src+"/"+pkg.replace(".","/")
+	}
+	
 	static def makeDir(parentFile) {
 		if(!parentFile.exists()){
 			parentFile.mkdirs()

@@ -59,11 +59,11 @@ class GripesPlugin implements Plugin<Project> {
 			GripesCreate creator = new GripesCreate([project: project])
 
 			if(project.hasProperty('model')) {
-				creator.model(project.properties.model)
+				creator.model(project.properties.model,project.properties.package?:null)
 			} else if (project.hasProperty('action')) {
-				creator.action(project.properties.action)
+				creator.action(project.properties.action,project.properties.package?:null)
 			} else if (project.hasProperty('views')) {
-				creator.views(project.properties.views)
+				creator.views(project.properties.views,project.properties.package?:null)
 			}
 		}
 		createTask.dependsOn<<project.compileGroovy
@@ -113,11 +113,8 @@ class GripesPlugin implements Plugin<Project> {
 			creator.install(project.properties.addon)
 		}
 		
-		/*		
-		*/
 		def warTask = project.getTasks().getByPath("war")
 		warTask.onlyIf {			
-			
 			def tempDir = new File(warTask.getTemporaryDir().canonicalPath+"/classes/META-INF")
 			if(!tempDir.exists()){
 				tempDir.mkdirs()
@@ -128,22 +125,26 @@ class GripesPlugin implements Plugin<Project> {
 			jpaFile.createNewFile()
 			jpaFile.text = GripesUtil.createJpaFile(dbConfig)
 
+			def gripesProps = new Properties()
+			new File("conf/gripes.properties").withInputStream { 
+			  stream -> gripesProps.load(stream) 
+			}
+
 			def webXmlTemplate = getResource("web.xml").text
 			def webXml = new File(warTask.getTemporaryDir().canonicalPath+"/web.xml")
 			webXml.createNewFile()
 			webXml.text = webXmlTemplate
+							.replaceAll("ACTIONPACKAGES", gripesProps["actions"])
 							.replaceAll("PROJECTNAME",GripesUtil.getSettings(project).appName)
 							.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
 
 			warTask.webInf { 
+				from(GripesUtil.getSettings(project).server.webAppSourceDirectory.name+"/WEB-INF")
 				from(warTask.getTemporaryDir().canonicalPath) {
 					exclude('MANIFEST.MF')
 				}
 			}
-							
-			warTask.properties.each {
-				println it
-			}
+			warTask.from { GripesUtil.getSettings(project).server.webAppSourceDirectory.name }
 				
 			true
 		}

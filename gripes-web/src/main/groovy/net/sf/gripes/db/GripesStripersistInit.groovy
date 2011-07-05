@@ -17,12 +17,13 @@ class GripesStripersistInit implements StripersistInit {
 	 * TODO Provide proper error checking for the import of data.
 	 */
 	void init() {
-		println "COME ON!"
 		logger.info "Gripes Stripersist Initialization."
 		
-		String importScript = this.class.classLoader.getResource("import.groovy").text
+		if(this.class.classLoader.getResource("import.groovy")) {
+			String importScript = this.class.classLoader.getResource("import.groovy").text
 		
-		GroovyShell shell = new GroovyShell()
-		Object value = shell.evaluate(importScript)
+			GroovyShell shell = new GroovyShell()
+			Object value = shell.evaluate(importScript)
+		}
 	}
 }

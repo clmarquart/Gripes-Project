@@ -69,15 +69,9 @@ repositories {
 sourceSets {
     main {
 		compileClasspath += configurations.provided
-        java {
-            srcDir 'src'
-        }
-        groovy {
-            srcDir 'src'
-        }
-        resources {
-            srcDir 'resources'
-        }
+        java { srcDir 'src' }
+        groovy { srcDir 'src' }
+        resources { srcDir 'resources' }
     }
 }
 

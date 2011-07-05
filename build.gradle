@@ -4,12 +4,6 @@ apply plugin: GripesPlugin
 
 if(file("conf/gripes-basic.gradle").exists()) apply from: "conf/gripes-basic.gradle"
 
-war {
-	from 'web'
-	webInf { from 'web/WEB-INF' }
-	destinationDir = file("/usr/local/tomcat6/instances/dev/webapps")
-}
-
 buildscript {
 	repositories {
 		mavenCentral()

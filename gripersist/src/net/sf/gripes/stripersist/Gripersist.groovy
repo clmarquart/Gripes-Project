@@ -18,11 +18,10 @@ class Gripersist extends Stripersist implements Interceptor, ConfigurableCompone
 	static Logger _logger= LoggerFactory.getLogger(Gripersist.class)
 	
     static {
-			println "COME ON!!!!!!"
         Package pkg = Stripersist.class.getPackage();
         _logger.info("""
 ##################################################
-# Stripersist Version: ${pkg.getSpecificationVersion()}, Build: ${pkg.getImplementationVersion()}
+# Stripersist Version: 1.0.3, Build: 151:153
 # Gripersist Version: 0.1.1
 ##################################################""")
     }
@@ -30,8 +29,10 @@ class Gripersist extends Stripersist implements Interceptor, ConfigurableCompone
     static EntityManager getEntityManager() {
 		_logger.debug "Searching for the EntityManager..."
 		
-        if (Stripersist.entityManagerFactories.size() != 1) {
-			def dbConfig = new ConfigSlurper().parse(this.classLoader.getResource("DB.groovy").text)
+		def dbConfigResource = this.classLoader.getResource("DB.groovy")
+		
+        if (Stripersist.entityManagerFactories.size() != 1 && dbConfigResource) {
+			def dbConfig = new ConfigSlurper().parse(dbConfigResource.text)
 			def primary = dbConfig.database.find{k,v->v.containsKey("primary")}?:dbConfig.database.find{it!=null}
 			def key = primary.key
 			
@@ -40,7 +41,7 @@ class Gripersist extends Stripersist implements Interceptor, ConfigurableCompone
 	        getEntityManager(key)
         } else {
 			_logger.debug "There is only one PersistenceUnit, using that."
-			_logger.debug "Factories: {}", Stripersist.entityManagerFactories.values().iterator().next()
+			
 	        Stripersist.getEntityManager(Stripersist.entityManagerFactories.values().iterator().next())
 		}
     }

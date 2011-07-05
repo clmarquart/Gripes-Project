@@ -4,7 +4,17 @@ import javax.persistence.EntityManager
 import org.hibernate.Criteria
 import org.hibernate.Session
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 abstract class GripesBaseModel {
+	Logger logger = LoggerFactory.getLogger(GripesBaseModel.class)
+	
+	GripesBaseModel(){
+		this.class.metaClass.static.methodMissing = {String name, args ->			
+			this.class.newInstance().methodMissing(name, args)
+		}
+	}
 	
 	def missingMethods = ["save","list","findBy"]
 	
@@ -19,6 +29,8 @@ abstract class GripesBaseModel {
 	}
 	
 	def save(map) {
+		logger.debug "Saving for {}", this.class.simpleName
+		
 		def obj = this.class.newInstance()
 		def dao = getDao() 
 		map[0].each {k,v->
@@ -45,6 +57,7 @@ abstract class GripesBaseModel {
 	}
 	
 	def methodMissing(String name, args) {
+		logger.debug "Missing the method {} on {}", name, this.class.simpleName
 		def method = missingMethods.find{name.startsWith(it)}
 		if(method) {
 			if(method.replaceFirst(name,"")!="")
@@ -52,10 +65,9 @@ abstract class GripesBaseModel {
 			else
 				this."$method"(args)
 		} else {
-			println "no method still!!!!"
+			logger.debug "no method still!!!!"
 			//throw new MissingMethodException(name, args)
 		}
 	}
-
-	def propertyMissing(String name, value) { println "$name property doesn't exist." }
+	def propertyMissing(String name, value) { logger.debug "{} property doesn't exist.", name }
 }
