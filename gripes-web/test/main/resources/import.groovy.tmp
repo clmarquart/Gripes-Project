@@ -1,0 +1,4 @@
+import net.sf.gripes.model.ModelTester
+
+def modelTester = new ModelTester(name:"Ima Test")
+modelTester.save()

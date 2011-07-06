@@ -203,10 +203,10 @@ class GripesCreate {
 		  stream -> gripesProps.load(stream) 
 		}
 		
-		if(gripesProps["actions"] && (gripesProps["actions"].indexOf("${pkg}.action") < 0))
-			gripesProps["actions"] = (gripesProps['actions']+","+pkg+".action")
+		if(gripesProps["actions"] && (gripesProps["actions"].indexOf("${(pkg?:GripesUtil.getSettings(project).packageBase)}.action") < 0))
+			gripesProps["actions"] = (gripesProps['actions']+","+(pkg?:GripesUtil.getSettings(project).packageBase)+".action")
 		else if (!gripesProps["actions"])
-			gripesProps["actions"] = pkg+".action"
+			gripesProps["actions"] = (pkg?:GripesUtil.getSettings(project).packageBase)+".action"
 			
 		gripesProps.store(new FileOutputStream(new File("conf/gripes.properties")), null)
 		

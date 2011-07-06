@@ -151,7 +151,7 @@ class GripesJetty {
 		// template, with the proper configuration
 		// createPersistenceXml()
 		
-/*		project.jettyRun.execute()*/
+		project.jettyRun.execute()
 	}
 	
 	def stop() {
