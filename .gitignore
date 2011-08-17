@@ -16,5 +16,6 @@ gripes-addons/**/bin
 **/repos
 /build/
 .eprj
+lucene/*
 
 !/gripes-addons

@@ -257,6 +257,7 @@ class GripesCreate {
 			}
 			
 			installScriptResource = new File("addons/${addon}/gripes.install") //getResource("addons/${addon}/gripes.install")
+			installScriptFile = installScriptResource
 			logger.info "InstallScript: {}", installScriptResource
 			if(installScriptResource) installScript = installScriptResource.text
 			else installScript = new File("addons/${addon}/gripes.install").text
@@ -266,7 +267,7 @@ class GripesCreate {
 			URLClassLoader childLoader = new URLClassLoader ([new File("addons/${addon}/bin/${addon}.jar").toURL()] as URL[], this.class.classLoader);
 			
 			logger.info "Executing the ${addon} install script"
-			new GroovyShell(childLoader,new Binding([project: project])).evaluate(installScript)
+			new GroovyShell(childLoader,new Binding([project: project, addonDir: installScriptFile.parentFile])).evaluate(installScript)
 		}
 		
 		def gripesConfigFile = new File("resources/Config.groovy")

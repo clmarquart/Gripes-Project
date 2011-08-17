@@ -52,6 +52,9 @@ import net.sourceforge.stripes.controller.StripesConstants;
 import net.sourceforge.stripes.exception.StripesRuntimeException;
 import net.sourceforge.stripes.util.Log;
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -91,7 +94,8 @@ import org.hibernate.ejb.HibernatePersistence;
  */
 @Intercepts( [ LifecycleStage.RequestInit, LifecycleStage.RequestComplete ])
 public class Stripersist implements Interceptor, ConfigurableComponent {
-    private static final Log log = Log.getInstance(Stripersist.class);
+/*    private static final Log log = Log.getInstance(Stripersist.class);*/
+	private static final Logger log = LoggerFactory.getLogger(Stripersist.class)
 
     /**
      * Parameter name for specifying StripersistInit classes in web.xml. This is optional;
@@ -149,7 +153,7 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
             if (allResources != null && allResources.hasMoreElements()) {
                 while (allResources.hasMoreElements()) {
                     URL url = allResources.nextElement();
-                    log.info("Reading persistence.xml from ", url, ".");
+                    log.info("Reading persistence.xml from {}", url);
                     init(url);
                 }
             } else {
@@ -160,13 +164,13 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
                 if (url == null)
                     url = getClass().getResource("/META-INF/persistence.xml");
 
-                log.debug("Reading persistence.xml from ", url, ".");
+                log.debug("Reading persistence.xml from {}", url);
                 init(url);
             }
 
             automaticTransactions = getConfigurationSwitch(AUTOMATIC_TRANSACTIONS, automaticTransactions);
 
-            log.info("Automatic transactions ", Stripersist.automaticTransactions ? "enabled" : "disabled");
+            log.info("Automatic transactions {}", Stripersist.automaticTransactions ? "enabled" : "disabled");
 
             dontCloseEntityManager = getConfigurationSwitch(DONT_CLOSE_ENTITYMANAGER, dontCloseEntityManager);
             if (dontCloseEntityManager)
@@ -181,16 +185,16 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
                     .getClassPropertyList(INIT_CLASSES_PARAM_NAME, StripersistInit.class)) {
                 try {
                     if (!initClass.isInterface() && ((initClass.getModifiers() & Modifier.ABSTRACT) == 0)) {
-                        log.debug("Found StripersistInit class ", initClass, " - instanciating and calling init()");
+                        log.debug("Found StripersistInit class {} - instanciating and calling init()", initClass);
                         initClass.newInstance().init();
                     }
                 } catch (Exception e) {
-                    log.error(e, "Error occurred while calling init() on ", initClass, ".");
+                    log.error("{} Error occurred while calling init() on {}",e , initClass);
                 }
             }
             requestComplete();
         } catch (Exception e) {
-            log.error(e);
+            log.error(""+e);
         }
     }
 
@@ -233,14 +237,14 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
                 String name = persistenceUnit.getAttributes().getNamedItem("name").getNodeValue();
                 if (firstPersistentUnit == null)
                     firstPersistentUnit = name;
-                log.info("Creating EntityManagerFactory for persistence unit \"", name, "\"");
+                log.info("Creating EntityManagerFactory for persistence unit {}", name);
 
 				Map<String, Object> configOverrides = new HashMap<String, Object>();
 /*                EntityManagerFactory factory = Persistence.createEntityManagerFactory(name, configOverrides);*/
 				EntityManagerFactory factory = (new HibernatePersistence()).createEntityManagerFactory(name, configOverrides);
 
                 Stripersist.entityManagerFactories.put(name, factory);
-                log.debug("created factory " + factory + " for " + name);
+                log.debug("created factory {} for {}", factory, name);
                 log.debug("emf.get(" + name + ") = " + Stripersist.entityManagerFactories.get(name));
                 log.debug("emf = " + Stripersist.entityManagerFactories);
 
@@ -257,7 +261,7 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
 
                             associateEntityManagerWithClass(factory, name, clazz);
                         } catch (Exception e) {
-                            log.error(e, "Exception occurred while loading ", className);
+                            log.error(e + " Exception occurred while loading " + className);
                         }
                     } else if ("jar-file".equalsIgnoreCase(child.getNodeName())) {
                         String jarFile = child.getFirstChild().getNodeValue();
@@ -314,17 +318,18 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
                 }
             }
         } catch (Throwable e) {
-            log.error(e);
+            log.error(""+e);
         }
     }
 
     private void associateEntityManagerWithClass(EntityManagerFactory factory, String name, Class<?> clazz) {
         if (!Stripersist.entityManagerFactoryLookup.containsKey(clazz)) {
-            log.debug("Associating ", clazz.getName(), " with persistence unit \"", name, "\"");
+            log.debug("Associating " + clazz.getName() + " with persistence unit \"" + name + "\"")
+
             Stripersist.entityManagerFactoryLookup.put(clazz, factory);
         }
     }
-
+	
     /**
      * Finds and returns all classes that are annotated with {@link Entity} or
      * {@link MappedSuperclass}. This code was taken from Stripes
@@ -357,17 +362,17 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
                 if (jarName == null && file.isFile())
                     continue;
 
-                log.debug("Scanning for entities in [", urlPath, "]");
+                log.debug("Scanning for entities in [" + urlPath + "]");
                 if (file.isDirectory()) {
-                    log.debug("checking directory ", file);
+                    log.debug("checking directory {}", file);
                     classes.addAll(findEntitiesInDirectory("", file));
                 } else {
-                    log.debug("checking jar ", file);
+                    log.debug("checking jar {}", file);
                     classes.addAll(findEntitiesInJar(file));
                 }
 
             } catch (Exception e) {
-                log.error(e);
+                log.error(""+e);
             }
         }
 
@@ -395,12 +400,12 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
                 }
             }
 
-            return classes;
+            return classes
         } catch (IOException ioe) {
-            log.error("Could not search jar file '", file, "' for entities due to an IOException: ", ioe.getMessage());
+            log.error("Could not search jar file '" + file + "' for entities due to an IOException: " + ioe.getMessage());
         }
 
-        return null;
+        return null
     }
 
     /**
@@ -463,7 +468,7 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
 
             return classes;
         } catch (IOException ioe) {
-            log.error("Could not search URL '", url, "' for entities due to an IOException: ", ioe.getMessage());
+            log.error("Could not search URL '" + url + "' for entities due to an IOException: " + ioe.getMessage());
         }
 
         return new HashSet<Class<?>>();
@@ -489,8 +494,7 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
         } catch (NoClassDefFoundError e) {
             // Ignored
         } catch (Throwable t) {
-            log.debug("Could not examine class '", fqn, "'", " due to a ", t.getClass().getName(), " with message: ", t
-                    .getMessage());
+            log.debug("Could not examine class '" + fqn + "'" +  " due to a " + t.getClass().getName() + " with message: " + t.getMessage());
         }
     }
 
@@ -498,8 +502,8 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
     protected void cleanup() {
         Stripersist.entityManagerFactoryLookup.clear();
 
-        Iterator<EntityManagerFactory> iterator = Stripersist.entityManagerFactories.values()
-                .iterator();
+        Iterator<EntityManagerFactory> iterator = Stripersist.entityManagerFactories.values().iterator();
+
         while (iterator.hasNext()) {
             EntityManagerFactory factory = iterator.next();
             if (factory.isOpen())
@@ -549,8 +553,8 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
      * @return an EntityManager or null
      */
     public static EntityManager getEntityManager(EntityManagerFactory factory) {
+		log.debug "Getting single EntityManager with $factory"
         Map<EntityManagerFactory, EntityManager> map = threadEntityManagers.get();
-
         EntityManager entityManager = null;
 
         if (map == null) {
@@ -563,7 +567,7 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
                             + "call Stripersist.requestComplete() in a finally block so\n"
                             + "Stripersist can clean everything up for you.");
 
-            log.error(sre);
+            log.error(""+sre);
 
             return null;
         }
@@ -594,11 +598,13 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
      * @return an @EntityManager
      */
     public static EntityManager getEntityManager() {
+		log.debug "Getting single EntityManager"
+		
         if (Stripersist.entityManagerFactories.size() != 1) {
             StripesRuntimeException sre = new StripesRuntimeException(
                     "In order to call Stripersist.getEntityManager() without any parameters there must be exactly one persistence unit defined.");
 
-            log.error(sre);
+            log.error(""+sre);
 
             return null;
         }
@@ -614,10 +620,11 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
      * @return an EntityManager or null
      */
     public static EntityManager getEntityManager(String persistenceUnit) {
+		log.debug "Getting entity Manager by PU: $persistenceUnit"
         EntityManagerFactory factory = getEntityManagerFactory(persistenceUnit);
 
         if (factory == null) {
-            log.warn("Couldn't find EntityManagerFactory for persistence unit ", persistenceUnit);
+            log.warn("Couldn't find EntityManagerFactory for persistence unit {}", persistenceUnit);
             return null;
         }
 
@@ -632,12 +639,13 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
      * @return an EntityManager or null
      */
     public static EntityManager getEntityManager(Class<?> forType) {
-        log.debug("Looking up EntityManager for type ", forType.getName());
+		log.debug "Getting entity Manager by class: $forType"
+        log.debug("Looking up EntityManager for type {}", forType.getName());
 
         EntityManagerFactory entityManagerFactory = getEntityManagerFactory(forType);
 
         if (entityManagerFactory == null) {
-            log.warn("Couldn't find EntityManagerFactory for class ", forType.getName());
+            log.warn("Couldn't find EntityManagerFactory for class {}", forType.getName());
             return null;
         }
 
@@ -653,7 +661,6 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
      */
     static void requestInit() {
         Map<EntityManagerFactory, EntityManager> map = threadEntityManagers.get();
-
         if (map == null) {
             map = new ConcurrentHashMap<EntityManagerFactory, EntityManager>();
             threadEntityManagers.set(map);
@@ -669,11 +676,9 @@ public class Stripersist implements Interceptor, ConfigurableComponent {
      */
     public static void requestComplete() {
         Map<EntityManagerFactory, EntityManager> map = Stripersist.threadEntityManagers.get();
-
-        if (map == null) {
-            // looks like nobody needed us this time
-            return;
-        }
+		
+        // looks like nobody needed us this time
+        if (map == null) return;
 
         log.trace("Cleaning up EntityManagers");
 

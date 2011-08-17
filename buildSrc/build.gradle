@@ -9,7 +9,7 @@ logger.quiet "Building the Gripes Plugin"
 
 group = 'gripes'
 archivesBaseName = 'gripes-plugin'
-version = '0.1.5'
+version = '0.1.7'
 libsDirName = "libs/${group}/${archivesBaseName}/${version}"
 
 repositories {
@@ -104,7 +104,7 @@ uploadArchives.doLast {
 			chmod: "0755",
 			userid: ftpUploadUser,
 			password: ftpUploadPassword) {
-			fileset(dir:"repos", includes: "*.*")
+			fileset(dir:"repos", includes: "*${version}.*")
 		}
     }
 }

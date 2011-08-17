@@ -48,14 +48,14 @@ dependencies {
 	
 	compile name: 'stripersist', version: '1.0.3'
 	compile name: 'stripesstuff', version: '0.1'
-	
-	/*	
+		
 	compile group: 'gripes', name: 'gripersist', version: '0.1.1'
-	compile group: 'gripes', name: 'gripes-web', version: '0.1.5'
-	*/
+	compile group: 'gripes', name: 'gripes-web', version: '0.1.7'
 	
+	/*
 	compile project(":gripersist")
 	compile project(":gripes-web")
+	*/
 	
 	//** Gripes Addons
 	compile fileTree(dir: 'addons', includes: ['**/bin/*.jar'])
