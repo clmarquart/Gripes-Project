@@ -1,0 +1,11 @@
+def base = GripesUtil.getSettings(project).src + "/" + GripesUtil.getSettings(project).packageBase.replaceAll(/\./,"/")
+
+
+if(base.startsWith(/\//)) base = base[1..base.length()-1]
+
+File searchBeanTemplate = new File(addonDir.canonicalPath+"/resources/SearchActionBean.template")
+
+File searchBean = new File(base+"/action/SearchActionBean.groovy")
+
+searchBean.createNewFile()
+searchBean.text = searchBeanTemplate.text.replaceAll(/PACKAGE/,GripesUtil.getSettings(project).packageBase)

@@ -1,0 +1,21 @@
+<ivy-module xmlns:m="http://ant.apache.org/ivy/maven" version="2.0">
+	<info organisation="gripes-addons" module="gripes-search" revision="0.1.0" status="integration" publication="20110706171450"/>
+	<configurations>
+		<conf name="archives" visibility="public" description="Configuration for the default artifacts."/>
+		<conf name="compile" visibility="private" description="Classpath for compiling the sources." extends="groovy"/>
+		<conf name="default" visibility="public" description="Configuration for the default artifacts and their dependencies." extends="archives,runtime"/>
+		<conf name="ftpAntTask" visibility="public"/>
+		<conf name="groovy" visibility="private" description="The groovy libraries to be used for this Groovy project." transitive="false"/>
+		<conf name="provided" visibility="public"/>
+		<conf name="runtime" visibility="private" description="Classpath for running the compiled sources." extends="compile"/>
+		<conf name="testCompile" visibility="private" description="Classpath for compiling the test sources." extends="compile"/>
+		<conf name="testRuntime" visibility="private" description="Classpath for running the test sources." extends="runtime,testCompile"/>
+	</configurations>
+	<publications>
+		<artifact name="gripes-search" type="jar" ext="jar" conf="archives"/>
+	</publications>
+	<dependencies>
+		<dependency org="org.hibernate" name="hibernate-core" rev="4.0.0.Beta2" conf="compile->default"/>
+		<dependency org="org.hibernate" name="hibernate-search" rev="4.0.0.SNAPSHOT" conf="compile->default"/>
+	</dependencies>
+</ivy-module>

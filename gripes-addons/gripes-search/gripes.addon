@@ -1,0 +1,4 @@
+
+actions = [
+	"net.sf.gripes.search.action.GripesSearchActionBean"
+]

@@ -1,0 +1,72 @@
+apply {
+	plugin 'java'
+	plugin 'groovy'
+}
+
+sourceCompatibility = 1.6
+
+group = 'gripes-addons'
+archivesBaseName = 'gripes-search'
+version = '0.1.0'
+libsDirName = "bin"
+
+configurations {
+	provided {  }
+}
+
+repositories {
+    mavenCentral()
+    mavenRepo urls: "http://www.gripes-project.org/libs"
+}
+
+dependencies {	
+	//** Groovy
+	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'
+	
+	//** Servlet
+	provided group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+	
+	//** Framework
+	compile group: 'net.sourceforge.stripes', name: 'stripes', version: '1.5.6'
+	compile name: 'stripesstuff', version: '0.1'
+	compile group: 'gripes', name: 'gripes-plugin', version: '0.1.5'
+	
+	/*	
+	compile group: 'gripes', name: 'gripes-web', version: '0.1.4'
+	*/
+	compile project(':gripes-web')
+	
+	//** Database
+	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'	
+	compile name: 'stripersist', version: '1.0.3'
+}
+
+sourceSets {
+	main {
+		compileClasspath += configurations.provided
+	    java { srcDir 'src/main/java' }
+		groovy { srcDir 'src/main/groovy' }
+	    resources { srcDir 'src/main/resources' }
+	}	
+}
+
+uploadArchives {
+    repositories {
+       flatDir(dirs: file("${libsDirName}"))
+    }
+}
+uploadArchives.doLast {
+	ant {
+		/*		
+		copy(todir:libsDirName) {
+	    	fileset(dir:".", includes:"gripes.*")
+		}
+		*/
+		
+		copy(file:"${buildDir}/bin/${archivesBaseName}-${version}.jar", tofile: "${libsDirName}/${archivesBaseName}.jar")
+		
+		/*
+		delete(file: buildDir.canonicalPath+"/ivy.xml")
+		*/
+    }
+}
