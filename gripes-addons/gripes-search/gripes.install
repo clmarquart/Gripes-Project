@@ -9,3 +9,13 @@ File searchBean = new File(base+"/action/SearchActionBean.groovy")
 
 searchBean.createNewFile()
 searchBean.text = searchBeanTemplate.text.replaceAll(/PACKAGE/,GripesUtil.getSettings(project).packageBase)
+
+File searchResultsTemplate = new File(addonDir.canonicalPath+"/resources/jsp/results.jsp")
+
+File searchResultsJsp = new File("web/WEB-INF/jsp/search/results.jsp")
+println new File(".").canonicalPath
+println searchResultsJsp.canonicalPath
+searchResultsJsp.parentFile.mkdirs()
+searchResultsJsp.createNewFile()
+
+searchResultsJsp.text = searchResultsTemplate.text.replaceAll(/PACKAGE/,GripesUtil.getSettings(project).packageBase)
