@@ -1,6 +1,14 @@
 apply plugin: 'java'
 apply plugin: 'jetty'
 
+
+def gripesConfig = new ConfigSlurper().parse(new File("resources/Config.groovy").text)
+println gripesConfig.addons
+gripesConfig.addons.each {
+	if(new File("gripes-addons/${it.replace('-src','')}/gripes.gradle").exists())
+		apply from: "gripes-addons/${it.replace('-src','')}/gripes.gradle"
+}
+
 gripes {
 	appName = "Gripes Application"
 	server = [

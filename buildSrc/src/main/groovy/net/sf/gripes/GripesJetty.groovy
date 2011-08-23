@@ -79,8 +79,7 @@ class GripesJetty {
 		def jpaFile = new File("build/classes/main/META-INF/persistence.xml")
 		jpaFile.createNewFile()
 		jpaFile.deleteOnExit()
-		jpaFile.text = GripesUtil.createJpaFile(dbConfig)
-		
+		jpaFile.text = GripesUtil.createJpaFile(dbConfig, gripesConfig.addons)
 		
 		[
 			"import.groovy",

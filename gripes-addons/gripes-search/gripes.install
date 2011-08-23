@@ -13,8 +13,7 @@ searchBean.text = searchBeanTemplate.text.replaceAll(/PACKAGE/,GripesUtil.getSet
 File searchResultsTemplate = new File(addonDir.canonicalPath+"/resources/jsp/results.jsp")
 
 File searchResultsJsp = new File("web/WEB-INF/jsp/search/results.jsp")
-println new File(".").canonicalPath
-println searchResultsJsp.canonicalPath
+
 searchResultsJsp.parentFile.mkdirs()
 searchResultsJsp.createNewFile()
 

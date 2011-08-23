@@ -1,4 +1,7 @@
 
-actions = [
-	"net.sf.gripes.search.action.GripesSearchActionBean"
-]
+persistence = """
+	<property name="hibernate.search.default.directory_provider" value="ram"/> 
+	<!--
+	<property name="hibernate.search.default.indexBase"  value="lucene/indexes"/>
+	-->
+"""

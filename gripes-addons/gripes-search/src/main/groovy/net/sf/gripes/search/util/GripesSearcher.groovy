@@ -15,13 +15,16 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class GripesSearcher {
-	Logger logger = LoggerFactory.getLogger(GripesSearch.class)
+	static Logger _logger = LoggerFactory.getLogger(GripesSearcher.class)
 	
 	static def query(String query) {
 		def results = []
 		EntityManager em 
 		Session session
 		FullTextSession fullTextSession
+		QueryBuilder b
+		org.apache.lucene.search.Query luceneQuery
+		org.hibernate.Query fullTextQuery
 		
 		def javaEntityClasses = Gripersist.getEntityClasses().collect { it.javaType }
 		javaEntityClasses.each { Class cls ->
@@ -29,15 +32,20 @@ class GripesSearcher {
 				cls.declaredFields.findAll { Field field -> 
 					field.isAnnotationPresent(org.hibernate.search.annotations.Field.class) 
 				}.each { Field field -> 
-					em = Gripersist.getEntityManager(cls)
+					em = Gripersist.getEntityManager()
+					
+					_logger.debug "Searching field $field on $cls for $query"
+					_logger.debug "Searching with EntityManager: $em"
+					
 					session = (Session) em.getDelegate()
 					fullTextSession = Search.getFullTextSession(session)
 					
-					QueryBuilder b = fullTextSession.searchFactory.buildQueryBuilder().forEntity(cls).get();
-					org.apache.lucene.search.Query luceneQuery = b.keyword().onField(field.name).matching(query).createQuery()
+					b = fullTextSession.searchFactory.buildQueryBuilder().forEntity(cls).get();
+					luceneQuery = b.keyword().wildcard().onField(field.name).matching(query).createQuery()
 					
-					org.hibernate.Query fullTextQuery = fullTextSession.createFullTextQuery( luceneQuery, cls )
-
+					fullTextQuery = fullTextSession.createFullTextQuery( luceneQuery, cls )
+					_logger.debug "Found {}", fullTextQuery.list()
+						
 					results += fullTextQuery.list()
 				}
 			}

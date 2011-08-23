@@ -240,44 +240,50 @@ class GripesCreate {
 		def addonName = addon
 		logger.info "Installing the {} add-on.", addon
 		
-		def addonConfig, installScript = "", installScriptFile, installScriptResource
-		if((addon=~/-src/).find()){
-			addon = addon.replaceFirst(/-src/,'')
-			addonConfig = new ConfigSlurper().parse(new File("gripes-addons/${addon}/gripes.addon").text)
-			
-			installScriptFile = new File("gripes-addons/${addon}/gripes.install")
-			
-			if(installScriptFile.exists()) installScript = installScriptFile.text
-		} else {		
-			makeDir(new File("addons/${addon}"))
-			
-			if(!new File("addons/${addon}/gripes.install").exists()) {
-				logger.info "Downloading the addon ${addon}"
-				download(addon)	
-			}
-			
-			installScriptResource = new File("addons/${addon}/gripes.install") //getResource("addons/${addon}/gripes.install")
-			installScriptFile = installScriptResource
-			logger.info "InstallScript: {}", installScriptResource
-			if(installScriptResource) installScript = installScriptResource.text
-			else installScript = new File("addons/${addon}/gripes.install").text
-		}
-		
-		if(installScript!=""){
-			URLClassLoader childLoader = new URLClassLoader ([new File("addons/${addon}/bin/${addon}.jar").toURL()] as URL[], this.class.classLoader);
-			
-			logger.info "Executing the ${addon} install script"
-			new GroovyShell(childLoader,new Binding([project: project, addonDir: installScriptFile.parentFile])).evaluate(installScript)
-		}
-		
 		def gripesConfigFile = new File("resources/Config.groovy")
 		def gripesConfig = gripesConfigFile.text
-		if((gripesConfig =~ /addons\s*=\s*\[\]/).find()){
-			gripesConfig = gripesConfig.replaceFirst(/addons\s*=\s*\[\s*\]/,'addons=["'+addonName+'"]')
+		def currentConfig = new ConfigSlurper().parse(gripesConfig)
+		
+		if(!currentConfig.addons.find{it==addon}){
+			def addonConfig, installScript = "", installScriptFile, installScriptResource
+			if((addon=~/-src/).find()){
+				addon = addon.replaceFirst(/-src/,'')
+				addonConfig = new ConfigSlurper().parse(new File("gripes-addons/${addon}/gripes.addon").text)
+			
+				installScriptFile = new File("gripes-addons/${addon}/gripes.install")
+			
+				if(installScriptFile.exists()) installScript = installScriptFile.text
+			} else {		
+				makeDir(new File("addons/${addon}"))
+			
+				if(!new File("addons/${addon}/gripes.install").exists()) {
+					logger.info "Downloading the addon ${addon}"
+					download(addon)	
+				}
+			
+				installScriptResource = new File("addons/${addon}/gripes.install") //getResource("addons/${addon}/gripes.install")
+				installScriptFile = installScriptResource
+				logger.info "InstallScript: {}", installScriptResource
+				if(installScriptResource) installScript = installScriptResource.text
+				else installScript = new File("addons/${addon}/gripes.install").text
+			}
+		
+			if(installScript!=""){
+				URLClassLoader childLoader = new URLClassLoader ([new File("addons/${addon}/bin/${addon}.jar").toURL()] as URL[], this.class.classLoader);
+			
+				logger.info "Executing the ${addon} install script"
+				new GroovyShell(childLoader,new Binding([project: project, addonDir: installScriptFile.parentFile])).evaluate(installScript)
+			}
+		
+			if((gripesConfig =~ /addons\s*=\s*\[\]/).find()){
+				gripesConfig = gripesConfig.replaceFirst(/addons\s*=\s*\[\s*\]/,'addons=["'+addonName+'"]')
+			} else {
+				gripesConfig = gripesConfig.replaceFirst(/addons\s*=\s*\[/,'addons=["'+addonName+'",')
+			}
+			gripesConfigFile.text = gripesConfig
 		} else {
-			gripesConfig = gripesConfig.replaceFirst(/addons\s*=\s*\[/,'addons=["'+addonName+'",')
+			logger.info "The $addon addon is already installed."
 		}
-		gripesConfigFile.text = gripesConfig
 	}
 	
 	private def download(addon) {

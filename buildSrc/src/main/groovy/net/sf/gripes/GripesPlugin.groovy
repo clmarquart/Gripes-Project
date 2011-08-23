@@ -120,10 +120,13 @@ class GripesPlugin implements Plugin<Project> {
 				tempDir.mkdirs()
 			}
 			
-			def dbConfig = new ConfigSlurper().parse(new File('resources/DB.groovy').toURL())			
+			def dbConfig = new ConfigSlurper().parse(new File('resources/DB.groovy').toURL())
+			def mainConfig = new ConfigSlurper().parse(new File('resources/Config.groovy').toURL())
+			def addons = mainConfig.addons
+			
 			def jpaFile = new File(tempDir.canonicalPath+"/persistence.xml")
 			jpaFile.createNewFile()
-			jpaFile.text = GripesUtil.createJpaFile(dbConfig)
+			jpaFile.text = GripesUtil.createJpaFile(dbConfig, mainConfig)
 
 			def gripesProps = new Properties()
 			new File("conf/gripes.properties").withInputStream { 
