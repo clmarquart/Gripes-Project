@@ -54,7 +54,7 @@ dependencies {
 	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.Beta2'
 	runtime group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
 	
-	compile name: 'stripersist', version: '1.0.3'
+	//compile name: 'stripersist', version: '1.0.3'
 	compile name: 'stripesstuff', version: '0.1'
 		
 	compile group: 'gripes', name: 'gripersist', version: '0.1.1'
@@ -82,23 +82,3 @@ sourceSets {
         resources { srcDir 'resources' }
     }
 }
-
-/*
-run.doFirst {
-	def gripesConfig = new ConfigSlurper().parse(new File("resources/Config.groovy").text)
-	gripesConfig.addons.each{
-		ant.copy(
-			file: "gripes-addons/${it}/gripes.addon",
-			tofile: "resources/gripes/gripes-addons/${it}/gripes.addon"
-		)
-	}
-}
-run.doLast {
-	def gripesConfig = new ConfigSlurper().parse(new File("resources/Config.groovy").text)
-	gripesConfig.addons.each{
-		ant.delete(
-			file: "resources/gripes/gripes-addons/${it}/gripes.addon"
-		)
-	}
-}
-*/

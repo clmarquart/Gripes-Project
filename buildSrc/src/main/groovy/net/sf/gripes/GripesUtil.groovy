@@ -1,3 +1,5 @@
+package net.sf.gripes
+
 class GripesUtil {
 	static def getRoot(project) {
 		project.projectDir.canonicalPath

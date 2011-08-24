@@ -11,15 +11,24 @@ version = '0.1.0'
 libsDirName = "bin"
 
 configurations {
-	provided {  }
+	provided {}
+	ftpAntTask {}
 }
 
 repositories {
     mavenCentral()
     mavenRepo urls: "http://www.gripes-project.org/libs"
+    mavenRepo name: "jboss-snapshots", urls: "http://snapshots.jboss.org/maven2/"
 }
 
-dependencies {	
+dependencies {
+	//** Ant FTP
+	ftpAntTask module("org.apache.ant:ant-commons-net:1.7.0") {
+	    module("commons-net:commons-net:1.4.1") {
+	        dependencies("oro:oro:2.0.8@jar")
+	    }
+	}
+		
 	//** Groovy
 	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'
 	
@@ -29,7 +38,7 @@ dependencies {
 	//** Framework
 	compile group: 'net.sourceforge.stripes', name: 'stripes', version: '1.5.6'
 	compile name: 'stripesstuff', version: '0.1'
-	compile group: 'gripes', name: 'gripes-plugin', version: '0.1.5'
+	compile group: 'gripes', name: 'gripes-plugin', version: '0.1.7'
 	
 	/*	
 	compile group: 'gripes', name: 'gripes-web', version: '0.1.4'
@@ -37,6 +46,7 @@ dependencies {
 	compile project(':gripes-web')
 	
 	//** Database
+	compile group: 'org.hibernate', name: 'hibernate-search', version: '4.0.0-SNAPSHOT'
 	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'	
 	compile name: 'stripersist', version: '1.0.3'
 }
@@ -52,21 +62,29 @@ sourceSets {
 
 uploadArchives {
     repositories {
-       flatDir(dirs: file("${libsDirName}"))
+       flatDir(dirs: file("repos"))
     }
 }
 uploadArchives.doLast {
-	ant {
-		/*		
-		copy(todir:libsDirName) {
-	    	fileset(dir:".", includes:"gripes.*")
-		}
-		*/
-		
+	/*	
+	ant {		
 		copy(file:"${buildDir}/bin/${archivesBaseName}-${version}.jar", tofile: "${libsDirName}/${archivesBaseName}.jar")
-		
-		/*
-		delete(file: buildDir.canonicalPath+"/ivy.xml")
-		*/
+    }
+	*/
+	
+    println "${ftpUploadRoot}/libs/gripes-addons/${archivesBaseName}/${version}"
+	ant {
+		taskdef(name: 'ftp',
+                classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
+                classpath: configurations.ftpAntTask.asPath)
+
+		ftp(action: "put",
+			server: "www.gripes-project.org", 
+			remotedir: "${ftpUploadRoot}/libs/gripes-addons/${archivesBaseName}/${version}",
+			chmod: "0755",
+			userid: ftpUploadUser,
+			password: ftpUploadPassword) {
+			fileset(dir:"repos", includes: "*.*")
+		}
     }
 }

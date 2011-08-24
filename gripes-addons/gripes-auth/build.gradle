@@ -11,7 +11,8 @@ version = '0.1.0'
 libsDirName = "bin"
 
 configurations {
-	provided {  }
+	provided {}
+	ftpAntTask {}
 }
 
 repositories {
@@ -20,6 +21,13 @@ repositories {
 }
 
 dependencies {	
+	//** Ant FTP
+	ftpAntTask module("org.apache.ant:ant-commons-net:1.7.0") {
+	    module("commons-net:commons-net:1.4.1") {
+	        dependencies("oro:oro:2.0.8@jar")
+	    }
+	}
+	
 	//** Groovy
 	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.7.10'
 	
@@ -52,21 +60,30 @@ sourceSets {
 
 uploadArchives {
     repositories {
-       flatDir(dirs: file("${libsDirName}"))
+       flatDir(dirs: file("repos"))
     }
 }
 uploadArchives.doLast {
-	ant {
-		/*		
-		copy(todir:libsDirName) {
-	    	fileset(dir:".", includes:"gripes.*")
-		}
-		*/
-		
+
+	/*	
+	ant {		
 		copy(file:"${buildDir}/bin/${archivesBaseName}-${version}.jar", tofile: "${libsDirName}/${archivesBaseName}.jar")
-		
-		/*
-		delete(file: buildDir.canonicalPath+"/ivy.xml")
-		*/
+    }
+	*/
+	
+    println "${ftpUploadRoot}/libs/gripes-addons/${archivesBaseName}/${version}"
+	ant {
+		taskdef(name: 'ftp',
+                classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
+                classpath: configurations.ftpAntTask.asPath)
+
+		ftp(action: "put",
+			server: "www.gripes-project.org", 
+			remotedir: "${ftpUploadRoot}/libs/gripes-addons/${archivesBaseName}/${version}",
+			chmod: "0755",
+			userid: ftpUploadUser,
+			password: ftpUploadPassword) {
+			fileset(dir:"repos", includes: "*.*")
+		}
     }
 }

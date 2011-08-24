@@ -1,3 +1,5 @@
+package net.sf.gripes
+
 import net.sf.gripes.*
 
 import org.gradle.api.Project

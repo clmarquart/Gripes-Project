@@ -1,3 +1,5 @@
+package net.sf.gripes
+
 import javax.persistence.Column
 
 import org.slf4j.Logger
