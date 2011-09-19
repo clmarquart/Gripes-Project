@@ -64,14 +64,6 @@ uploadArchives {
     }
 }
 uploadArchives.doLast {
-
-	/*	
-	ant {		
-		copy(file:"${buildDir}/bin/${archivesBaseName}-${version}.jar", tofile: "${libsDirName}/${archivesBaseName}.jar")
-    }
-	*/
-	
-    println "${ftpUploadRoot}/libs/gripes-addons/${archivesBaseName}/${version}"
 	ant {
 		taskdef(name: 'ftp',
                 classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',

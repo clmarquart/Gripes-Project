@@ -38,7 +38,7 @@ class GripesJetty {
 		def ant = new AntBuilder()
 		def dbConfig = new ConfigSlurper().parse(new File('resources/DB.groovy').toURL())
 		def gripesConfig = new ConfigSlurper().parse(new File('resources/Config.groovy').toURL())
-		
+		println "DB CONFIG: $dbConfig"
 /*		def jpaTemplate = """
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

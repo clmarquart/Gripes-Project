@@ -57,8 +57,9 @@ class GripesUtil {
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" 
 	version="1.0">
 		"""
+		println "Template: " + this.classLoader.getResource("conf/persistence.template")
 		dbConfig.database.each { k,v ->
-			jpaTemplate += getResource("conf/persistence.template").text
+			jpaTemplate += this.classLoader.getResource("conf/persistence.template").text
 			jpaTemplate = jpaTemplate
 							.replaceAll(/\[NAME\]/,k)
 							.replaceAll(/\[DBSCHEMA\]/,v.schema)

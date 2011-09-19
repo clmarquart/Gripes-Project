@@ -1,3 +1,5 @@
+import net.sf.gripes.GripesUtil
+
 def base = GripesUtil.getSettings(project).src + "/" + GripesUtil.getSettings(project).packageBase.replaceAll(/\./,"/")
 
 

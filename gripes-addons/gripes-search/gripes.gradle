@@ -3,7 +3,7 @@ println "Gripes Search Gradle Additions"
 apply plugin: 'java'
 
 dependencies {
-	compile (group: 'org.hibernate', name: 'hibernate-search', version: '4.0.0-SNAPSHOT') {
+	compile (group: 'org.hibernate', name: 'hibernate-search', version: '4.0.0.Alpha2') {
 		exclude group: 'org.slf4j'
 	}
 }
