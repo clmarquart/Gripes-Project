@@ -13,6 +13,10 @@ cache.bin
 /addons2/*
 /addons/*
 gripes-addons/**/bin
+gripes-addons/gripes-search/repos/
+gripes-addons/gripes-search/build/
+gripes-addons/gripes-auth/repos/
+gripes-addons/gripes-auth/build/
 **/repos
 /build/
 .eprj

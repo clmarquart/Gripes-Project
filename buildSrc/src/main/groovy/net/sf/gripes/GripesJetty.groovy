@@ -137,7 +137,7 @@ class GripesJetty {
 		webXml.createNewFile()
 		webXml.deleteOnExit()
 		webXml.text = webXmlTemplate
-						.replaceAll("ACTIONPACKAGES", gripesProps["actions"])
+						.replaceAll("ACTIONPACKAGES", gripesProps["actions"]?:GripesUtil.getSettings(project).packageBase+".action")
 						.replaceAll("PROJECTNAME",GripesUtil.getSettings(project).appName)
 						.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
 						

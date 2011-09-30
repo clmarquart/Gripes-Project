@@ -41,7 +41,8 @@ class GripesCreate {
 			}
 		}
 		
-		['conf/gripes-basic.gradle','conf/gripes.properties'].each {
+		// TODO Config.groovy needs to create action list by default
+		['conf/gripes-basic.gradle','conf/gripes.properties','resources/Config.groovy'].each {
 			def newFile = new File("${it}")
 			if(!newFile.exists()) {
 				newFile.createNewFile()
