@@ -122,36 +122,43 @@ class GripesPlugin implements Plugin<Project> {
 				tempDir.mkdirs()
 			}
 			
-			def dbConfig = new ConfigSlurper().parse(new File('resources/DB.groovy').toURL())
-			def mainConfig = new ConfigSlurper().parse(new File('resources/Config.groovy').toURL())
-			def addons = mainConfig.addons
+			def dbConfig, mainConfig
+			try {
+				dbConfig = new ConfigSlurper().parse(new File('resources/DB.groovy').toURL())
+				mainConfig = new ConfigSlurper().parse(new File('resources/Config.groovy').toURL())	
 			
-			def jpaFile = new File(tempDir.canonicalPath+"/persistence.xml")
-			jpaFile.createNewFile()
-			jpaFile.text = GripesUtil.createJpaFile(dbConfig, mainConfig)
+				def addons = mainConfig.addons
+			
+				def jpaFile = new File(tempDir.canonicalPath+"/persistence.xml")
+				jpaFile.createNewFile()
+				jpaFile.text = GripesUtil.createJpaFile(dbConfig, mainConfig)
 
-			def gripesProps = new Properties()
-			new File("conf/gripes.properties").withInputStream { 
-			  stream -> gripesProps.load(stream) 
-			}
-
-			def webXmlTemplate = getResource("web.xml").text
-			def webXml = new File(warTask.getTemporaryDir().canonicalPath+"/web.xml")
-			webXml.createNewFile()
-			webXml.text = webXmlTemplate
-							.replaceAll("ACTIONPACKAGES", gripesProps["actions"])
-							.replaceAll("PROJECTNAME",GripesUtil.getSettings(project).appName)
-							.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
-
-			warTask.webInf { 
-				from(GripesUtil.getSettings(project).server.webAppSourceDirectory.name+"/WEB-INF")
-				from(warTask.getTemporaryDir().canonicalPath) {
-					exclude('MANIFEST.MF')
+				def gripesProps = new Properties()
+				new File("conf/gripes.properties").withInputStream { 
+				  stream -> gripesProps.load(stream) 
 				}
-			}
-			warTask.from { GripesUtil.getSettings(project).server.webAppSourceDirectory.name }
+
+				def webXmlTemplate = getResource("web.xml").text
+				def webXml = new File(warTask.getTemporaryDir().canonicalPath+"/web.xml")
+				webXml.createNewFile()
+				webXml.text = webXmlTemplate
+								.replaceAll("ACTIONPACKAGES", gripesProps["actions"])
+								.replaceAll("PROJECTNAME",GripesUtil.getSettings(project).appName)
+								.replaceAll("PACKAGE",GripesUtil.getSettings(project).packageBase)
+
+				warTask.webInf { 
+					from(GripesUtil.getSettings(project).server.webAppSourceDirectory.name+"/WEB-INF")
+					from(warTask.getTemporaryDir().canonicalPath) {
+						exclude('MANIFEST.MF')
+					}
+				}
+				warTask.from { GripesUtil.getSettings(project).server.webAppSourceDirectory.name }
 				
-			true
+				true
+			} catch (e) {
+				e.printStackTrace()
+				false
+			}
 		}
     }
 

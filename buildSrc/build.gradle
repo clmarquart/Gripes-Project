@@ -9,7 +9,7 @@ logger.quiet "Building the Gripes Plugin"
 
 group = 'gripes'
 archivesBaseName = 'gripes-plugin'
-version = '0.1.7'
+version = '0.1.8'
 libsDirName = "libs/${group}/${archivesBaseName}/${version}"
 
 repositories {

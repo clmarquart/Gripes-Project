@@ -19,6 +19,7 @@ repositories {
     mavenCentral()
     mavenRepo urls: "http://www.gripes-project.org/libs"
     mavenRepo name: "jboss-snapshots", urls: "http://snapshots.jboss.org/maven2/"
+    mavenRepo name: "jboss-public", urls: "https://repository.jboss.org/nexus/content/groups/public/"
 }
 
 dependencies {
