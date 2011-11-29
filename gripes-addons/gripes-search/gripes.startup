@@ -1,0 +1,14 @@
+println "STARTUP: ${entityPackage}"
+(new File(this.class.classLoader.getResource(entityPackage.replace(".","/")).getFile())).listFiles().each {
+	println "CLASS ${it}"
+	if(it.isFile()) {
+		def klass = Class.forName(entityPackage.replace("/",".")+"."+it.name.replace(".class",""))
+		if(klass && klass.getAnnotation(javax.persistence.Entity)){
+			if(klass.newInstance().properties.searchable) {
+				def builder = Class.forName("net.sf.gripes.search.builder.GripesSearchBuilder").newInstance(klass)
+				klass.newInstance().properties.searchable.setDelegate(builder)
+				klass.newInstance().properties.searchable.call()
+			}
+		}
+	}
+}
