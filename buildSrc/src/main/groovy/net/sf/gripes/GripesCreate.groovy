@@ -415,15 +415,22 @@ class GripesCreate {
 		if(!field.type.isPrimitive()){
 			if(field.type.equals(String) || (field.type.superclass.equals(Number))) {
 				html = '<input type="text" value="${bean.'+model.simpleName.toLowerCase()+'.'+field.name+'}" name="'+model.simpleName.toLowerCase()+'.'+field.name+'" />'
-			} else if(field.type.getAnnotation(javax.persistence.Entity)) {
-				html = '<stripes:link href="/'+field.type.simpleName.toLowerCase()+'/edit?'+field.type.simpleName.toLowerCase()+'=${bean.'+model.simpleName.toLowerCase()+'.'+field.name+'.id}">Link</stripes:link>'
-			} else if(field.type.interfaces.find{it.equals(java.util.Collection)}){
+			} else if(field.type.interfaces.find{it.equals(java.util.Collection)}) {
 				html += '<c:forEach items="${bean.'+model.simpleName.toLowerCase()+"."+field.name+'}" var="it">\n'
 				html += '\t<stripes:link href="/${fn:toLowerCase(it.class.simpleName)}/view?${it.class.simpleName}=${it.id}">${it}</stripes:link>\n'
 				html += '</c:forEach>\n'
-			}			
+			} else if(field.type.getAnnotation(javax.persistence.Entity)) {
+				html += '<c:choose>\n'
+				html += '\t<c:when test="${bean.'+model.simpleName.toLowerCase()+"."+field.name+'}">\n'
+				html += '\t\t<stripes:link href="/'+field.type.simpleName.toLowerCase()+'/edit?'+field.type.simpleName.toLowerCase()+'=${bean.'+model.simpleName.toLowerCase()+'.'+field.name+'.id}">Link</stripes:link>\n'
+				html += '\t</c:when>\n'
+				html += '\t<c:otherwise>\n'
+				html += '\t\t<stripes:link href="/'+field.type.simpleName.toLowerCase()+'/create">Create</stripes:link>\n'
+				html += '\t</c:otherwise>\n'
+				html += '</c:choose>\n'
+			}
 		} else {
-			if(field.type.equals(boolean)) {	
+			if(field.type.equals(boolean)) {
 				html = '<input type="checkbox" value="1" ${(bean.'+model.simpleName.toLowerCase()+'.'+field.name+'==true)?"checked=\'checked\'":""} name="'+model.simpleName.toLowerCase()+'.'+field.name+'" />'
 			}
 		}

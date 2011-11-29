@@ -17,7 +17,7 @@ repositories {
     mavenRepo urls: "http://www.gripes-project.org/libs"
     mavenRepo name: "jboss-snapshots", urls: "http://snapshots.jboss.org/maven2/"
     mavenRepo name: "jboss-public", urls: "https://repository.jboss.org/nexus/content/groups/public/"
-    mavenRepo name: "atlassian", urls: "https://maven.atlassian.com/content/groups/public/"
+    //mavenRepo name: "atlassian", urls: "https://maven.atlassian.com/content/groups/public/"
 }
 
 sourceSets {
@@ -59,15 +59,17 @@ dependencies {
 	//** Database
 	compile group: 'org.hsqldb', name: 'hsqldb', version: '2.0.0'
 	
-	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
-	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.Beta2'
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.CR6'
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.CR6'
 	compile group: 'org.hibernate', name: 'hibernate-annotations', version: '3.5.6-Final'
-	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
+	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.CR6'
 	
 	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	
 	compile group: 'gripes', name: 'gripersist', version: '0.1.1'
-	compile group: 'gripes', name: 'gripes-web', version: '0.1.5'
+	compile group: 'gripes', name: 'gripes-web', version: '0.1.7'
+	
+	testCompile 'junit:junit:4.7'
 	
 	/*
 	compile project(":gripersist")

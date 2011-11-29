@@ -12,6 +12,7 @@ buildscript {
 		mavenRepo name: "jboss-public", urls: "https://repository.jboss.org/nexus/content/groups/public/"
 		mavenRepo name: "atlassian", urls: "https://maven.atlassian.com/content/groups/public/"
 	}
+	
 	dependencies {
 		classpath group: 'gripes', name: 'gripes-plugin', version: '0.1.7'
 		classpath group: 'gripes', name: 'gripes-web', version: '0.1.7'

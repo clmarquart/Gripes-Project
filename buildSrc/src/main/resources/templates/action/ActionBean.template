@@ -25,8 +25,9 @@ class MODELActionBean extends BaseActionBean {
 	}
 
 	@HandlesEvent("list") Resolution list() {
-		context.request.setAttribute("list",MODEL.list())
-		forward("list")
+		forward("list") { request ->
+			request.setAttribute("list",MODEL.list())
+		}
 	}
 
 	@HandlesEvent("create") Resolution create() {

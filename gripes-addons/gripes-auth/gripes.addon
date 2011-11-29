@@ -8,5 +8,5 @@ filters {
 }
 
 actions = [
-	"net.sf.gripes.action.GripesLoginActionBean"
+//	"net.sf.gripes.action.GripesLoginActionBean"
 ]

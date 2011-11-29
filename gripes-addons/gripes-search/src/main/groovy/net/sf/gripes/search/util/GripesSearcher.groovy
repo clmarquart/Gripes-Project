@@ -19,36 +19,30 @@ class GripesSearcher {
 	
 	static def query(String query) {
 		def results = []
-		EntityManager em 
-		Session session
-		FullTextSession fullTextSession
+		EntityManager em = Gripersist.getEntityManager()
+		Session session = (Session) em.getDelegate()
+		FullTextSession fullTextSession = Search.getFullTextSession(session)
 		QueryBuilder b
 		org.apache.lucene.search.Query luceneQuery
 		org.hibernate.Query fullTextQuery
 		
-		def javaEntityClasses = Gripersist.getEntityClasses().collect { it.javaType }
-		javaEntityClasses.each { Class cls ->
-			if(cls.isAnnotationPresent(org.hibernate.search.annotations.Indexed.class)) {
-				cls.declaredFields.findAll { Field field -> 
-					field.isAnnotationPresent(org.hibernate.search.annotations.Field.class) 
-				}.each { Field field -> 
-					em = Gripersist.getEntityManager()
-					
-					_logger.debug "Searching field $field on $cls for $query"
-					_logger.debug "Searching with EntityManager: $em"
-					
-					session = (Session) em.getDelegate()
-					fullTextSession = Search.getFullTextSession(session)
-					
-					b = fullTextSession.searchFactory.buildQueryBuilder().forEntity(cls).get();
-					luceneQuery = b.keyword().wildcard().onField(field.name).matching(query).createQuery()
-					
-					fullTextQuery = fullTextSession.createFullTextQuery( luceneQuery, cls )
-					_logger.debug "Found {}", fullTextQuery.list()
-						
-					results += fullTextQuery.list()
-				}
-			}
+		_logger.debug "Searching with EntityManager: $em"
+		
+		def propFile = new File(System.getProperty("gripes.temp")+"/addons/gripes-search/Config.properties")
+		def props = new Properties()
+		propFile.withInputStream { 
+		  stream -> props.load(stream) 
+		}
+		props.keys().each { String className ->
+			_logger.debug "Searching $className for $query on field {}", props.getProperty(className)
+			
+			b = fullTextSession.searchFactory.buildQueryBuilder().forEntity(Class.forName(className)).get();
+			luceneQuery = b.keyword().wildcard().onField(props.getProperty(className)).matching(query).createQuery()
+			
+			fullTextQuery = fullTextSession.createFullTextQuery( luceneQuery, Class.forName(className) )
+			_logger.debug "Found {}", fullTextQuery.list()
+				
+			results += fullTextQuery.list()
 		}
 		
 		results

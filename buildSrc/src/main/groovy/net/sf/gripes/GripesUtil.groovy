@@ -50,14 +50,13 @@ class GripesUtil {
 		TODO Use addons from Config.groovy to make additions to the persistence.xml (i.e. gripes-search)
 	*/
 	static String createJpaFile(dbConfig, addons){
-		println "ADDONS: " + addons
 		def jpaTemplate = """
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" 
 	version="1.0">
 		"""
-		println "Template: " + this.classLoader.getResource("conf/persistence.template")
+		
 		dbConfig.database.each { k,v ->
 			jpaTemplate += this.classLoader.getResource("conf/persistence.template").text
 			jpaTemplate = jpaTemplate
@@ -85,11 +84,10 @@ class GripesUtil {
 		addons.each { addon ->
 			addonConfig = new File(((addon=~/-src/).find())?("gripes-addons/"+addon.replace("-src","")+"/gripes.addon"):("addons/${it}/gripes.addon"))
 			def config = new ConfigSlurper().parse(addonConfig.text)
-			jpaTemplate = jpaTemplate.replaceAll(/\[ADDITIONAL\]/,"[ADDITIONAL]"+config.persistence)
+			jpaTemplate = jpaTemplate.replaceAll(/\[ADDITIONAL\]/,"[ADDITIONAL]"+((config.persistence.size()>0)?config.persistence:''))
 		}
 		jpaTemplate = jpaTemplate.replaceAll(/\[ADDITIONAL\]/,"")
 		jpaTemplate += "\n</persistence>\n"
-
 		jpaTemplate
 	}
 }

@@ -35,7 +35,8 @@
 			<param-name>Extension.Packages</param-name>
 			<param-value>
 		 		net.sf.gripes.stripersist,
-				net.sf.gripes.util.GripesActionResolver
+				net.sf.gripes.util.GripesActionResolver,
+				net.sf.gripes.interceptor
 		 	</param-value>
 		</init-param>
 	</filter>

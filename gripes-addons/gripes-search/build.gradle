@@ -39,7 +39,8 @@ dependencies {
 	//** Framework
 	compile group: 'net.sourceforge.stripes', name: 'stripes', version: '1.5.6'
 	compile name: 'stripesstuff', version: '0.1'
-	compile group: 'gripes', name: 'gripes-plugin', version: '0.1.7'
+	
+	compile group: 'gripes', name: 'gripes-plugin', version: '0.1.8'
 	
 	/*	
 	compile group: 'gripes', name: 'gripes-web', version: '0.1.4'
@@ -47,9 +48,15 @@ dependencies {
 	compile project(':gripes-web')
 	
 	//** Database
-	compile group: 'org.hibernate', name: 'hibernate-search', version: '4.0.0-SNAPSHOT'
 	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'	
-	compile name: 'stripersist', version: '1.0.3'
+	//compile name: 'stripersist', version: '1.0.3'
+	/*
+	compile group: 'gripes', name: 'gripersist', version: '0.1.1'
+	*/
+	compile project(':gripersist')
+	
+	//** Hibernate Search
+	compile group: 'org.hibernate', name: 'hibernate-search', version: '4.0.0.CR1'
 }
 
 sourceSets {

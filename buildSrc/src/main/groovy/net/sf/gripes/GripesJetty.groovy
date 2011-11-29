@@ -38,7 +38,7 @@ class GripesJetty {
 		def ant = new AntBuilder()
 		def dbConfig = new ConfigSlurper().parse(new File('resources/DB.groovy').toURL())
 		def gripesConfig = new ConfigSlurper().parse(new File('resources/Config.groovy').toURL())
-		println "DB CONFIG: $dbConfig"
+
 /*		def jpaTemplate = """
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -85,6 +85,7 @@ class GripesJetty {
 			"import.groovy",
 			"StripesResources.properties",
 			"DB.groovy",
+			"logback.groovy",
 			"Config.groovy"
 		].each {
 			def newFile = new File(project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/${it}")
@@ -94,12 +95,17 @@ class GripesJetty {
 		}
 		
 		gripesConfig.addons.each {
+			def addonName = it
 			try {
 				def addonDir = ((it=~/-src$/).find())?(new File("gripes-addons/${it.replaceFirst('-src','')}")):(new File("addons/${it}"))
-				ant.copy(
-					file: addonDir.canonicalPath+"/gripes.addon",
-					tofile: project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/gripes/gripes-addons/${it}/gripes.addon"
-				)
+				["addon","startup"].each { ext ->
+					if(new File(addonDir.canonicalPath+"/gripes.${ext}").exists()) {
+						ant.copy(
+							file: addonDir.canonicalPath+"/gripes.${ext}",
+							tofile: project.jettyRun['webAppSourceDirectory'].canonicalPath+"/WEB-INF/classes/gripes/gripes-addons/${addonName}/gripes.${ext}"
+						)
+					}
+				}
 
 				if(addonDir.canonicalPath.toString().startsWith("addons")) {
 					addonDir.eachFileRecurse {

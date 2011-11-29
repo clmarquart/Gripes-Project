@@ -1,9 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'jetty'
 
-
 def gripesConfig = new ConfigSlurper().parse(new File("resources/Config.groovy").text)
-println gripesConfig.addons
 gripesConfig.addons.each {
 	if(new File("gripes-addons/${it.replace('-src','')}/gripes.gradle").exists())
 		apply from: "gripes-addons/${it.replace('-src','')}/gripes.gradle"
@@ -42,10 +40,14 @@ dependencies {
 	runtime group: 'taglibs', name:'standard', version: '1.1.2'
 	
 	//** Logging
-	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.5.11'
+/*	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.5.11'
 	compile group: 'ch.qos.logback', name: 'logback-core', version: '0.9.19'
 	compile group: 'ch.qos.logback', name: 'logback-access', version: '0.9.19'
-	compile group: 'ch.qos.logback', name: 'logback-classic', version: '0.9.19'
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: '0.9.19'*/
+	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
+	compile group: 'ch.qos.logback', name: 'logback-core', version: '0.9.28'
+	compile group: 'ch.qos.logback', name: 'logback-access', version: '0.9.28'
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: '0.9.28'
 	
 	//** Database
 	compile group: 'org.hsqldb', name: 'hsqldb', version: '2.0.0'

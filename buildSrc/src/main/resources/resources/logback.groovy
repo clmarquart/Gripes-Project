@@ -1,7 +1,7 @@
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import ch.qos.logback.core.ConsoleAppender
 
-import static ch.qos.logback.classic.Level.DEBUG
+import static ch.qos.logback.classic.Level.*
 
 appender("STDOUT", ConsoleAppender) {
   encoder(PatternLayoutEncoder) {
@@ -9,4 +9,5 @@ appender("STDOUT", ConsoleAppender) {
   }
 }
 
+logger("org.hibernate", WARN, ["STDOUT"])
 root(DEBUG, ["STDOUT"])

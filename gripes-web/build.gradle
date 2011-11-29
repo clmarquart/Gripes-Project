@@ -1,5 +1,7 @@
-apply plugin: 'java'
-apply plugin: 'groovy'
+apply {
+	plugin 'java'
+	plugin 'groovy'
+}
 
 logger.quiet "Building Gripes-Web"
 
@@ -65,14 +67,13 @@ dependencies {
 	
 	//** Database
 	testCompile group: 'org.hsqldb', name: 'hsqldb', version: '2.0.0'
-	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
-	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.Beta2'
-	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.CR6'
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.CR6'
+	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.CR6'
 	
 	//** Testing
 	testCompile group: 'junit', name: 'junit', version: '4.8.2'
 
-	
 	compile project(":gripersist")
 	
 	compile name: 'stripesstuff', version: '0.1'

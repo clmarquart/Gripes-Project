@@ -104,7 +104,6 @@ class GripesPlugin implements Plugin<Project> {
 			project.jettyStop.execute()
 		}
 		
-		
 		def installTask = project.task('install') << {
 			if(!(new File("resources/Config.groovy").exists())) {
 				logger.error "GripesSequenceError: You must first run `gradle init` and `gradle setup`."

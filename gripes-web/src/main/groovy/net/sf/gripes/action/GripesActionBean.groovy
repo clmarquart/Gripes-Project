@@ -1,5 +1,6 @@
 package net.sf.gripes.action
 
+import net.sf.gripes.interceptor.Gripes
 import net.sf.gripes.util.GripesActionBeanContext
 
 import net.sourceforge.stripes.action.ActionBean
@@ -13,6 +14,16 @@ import javax.servlet.http.HttpServletRequest;
 
 abstract class GripesActionBean implements ActionBean {	
 	GripesActionBeanContext context
+
+	static {
+		
+	}
+	
+	Resolution forward(String page, Closure c) {
+		c.call(Gripes.getRequest())
+		
+		new ForwardResolution("/WEB-INF/jsp/"+this.class.simpleName.replace("ActionBean","").toLowerCase()+"/"+page+".jsp")
+	}
 
 	Resolution forward(String page) {
 		new ForwardResolution("/WEB-INF/jsp/"+this.class.simpleName.replace("ActionBean","").toLowerCase()+"/"+page+".jsp")

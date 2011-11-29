@@ -1,73 +1,52 @@
 package net.sf.gripes.model
 
-import javax.persistence.EntityManager
-import org.hibernate.Criteria
-import org.hibernate.Session
-
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-abstract class GripesBaseModel {
+class GripesBaseModel {
 	Logger logger = LoggerFactory.getLogger(GripesBaseModel.class)
-	
-	GripesBaseModel(){
-		this.class.metaClass.static.methodMissing = {String name, args ->			
-			this.class.newInstance().methodMissing(name, args)
-		}
-	}
-	
-	def missingMethods = ["save","list","findBy"]
-	
-	def getList() {
-		getDao().list()
-	}
-	
-	def save() {
-		def dao = getDao()
-		dao.save(this)
-		dao.commit()
-	}
-	
-	def save(map) {
-		logger.debug "Saving for {}", this.class.simpleName
+	static Logger _logger = LoggerFactory.getLogger(GripesBaseModel.class)
 		
-		def obj = this.class.newInstance()
-		def dao = getDao() 
-		map[0].each {k,v->
-			obj."${k}" = v
+	static void crudify(Class cls) {
+		_logger.debug "CRUDify the Entity: $cls"
+		
+		cls.metaClass.static.getDao = {
+			Class.forName("${cls.package.name.replace('model','dao')}.${cls.simpleName}Dao").newInstance()
 		}
-		dao.save(obj)
-		dao.commit()
-	}
-	
-	def list(map){
-		getList()
-	}
-	
-	def find(map) {
-		def daoClass = getDao().find(new Long(map[0]))
-	}
-	
-	def findBy(map, params) {		
-		getDao().findBy(params.toLowerCase(),map[0])
-	}
-	
-	def getDao() {
-		Class.forName("${this.class.package.name.replace('model','dao')}.${this.class.simpleName}Dao").newInstance()
-	}
-	
-	def methodMissing(String name, args) {
-		logger.debug "Missing the method {} on {}", name, this.class.simpleName
-		def method = missingMethods.find{name.startsWith(it)}
-		if(method) {
-			if(method.replaceFirst(name,"")!="")
-				this."$method"(args,name.replaceFirst(method,""))
-			else
-				this."$method"(args)
-		} else {
-			logger.debug "no method still!!!!"
-			//throw new MissingMethodException(name, args)
+		cls.metaClass.static.getList = {
+			getDao().list()
+		}
+		cls.metaClass.static.list = {
+			getList()
+		}
+		cls.metaClass.static.save = {
+			_logger.debug "Saving for {}", cls.simpleName
+			_logger.debug "Object is {}", delegate
+			
+			def dao = getDao()
+			dao.save(delegate)
+			dao.commit()
+		}
+		
+		cls.metaClass.static.save = { map ->
+			_logger.debug "Saving for {}", cls.simpleName
+
+			def obj = cls.newInstance()
+			def dao = getDao()
+			map.each {k,v->
+				obj."${k}" = v
+			}
+			
+			dao.save(obj)
+			dao.commit()
+		}
+		
+		cls.metaClass.static.find = { id ->
+			getDao().find(new Long(id))
+		}
+		
+		cls.metaClass.static.findBy = { id, field ->
+			getDao().findBy(field.toLowerCase(), id)
 		}
 	}
-	def propertyMissing(String name, value) { logger.debug "{} property doesn't exist.", name }
 }

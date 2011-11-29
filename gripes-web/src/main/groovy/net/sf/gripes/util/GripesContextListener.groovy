@@ -1,5 +1,9 @@
 package net.sf.gripes.util
 
+import net.sf.gripes.model.GripesBaseModel
+import net.sf.gripes.util.jetty.*
+import net.sf.gripes.util.tomcat.*
+
 import javax.servlet.ServletContext
 import javax.servlet.ServletContextEvent
 import javax.servlet.ServletContextListener
@@ -20,16 +24,6 @@ class GripesContextListener  implements ServletContextListener {
 		context = contextEvent.getServletContext()
 		
 		def pack = context.getInitParameter("GripesPackage")+".model"
-/*		(new File(this.class.classLoader.getResource(pack.replace(".","/")).getFile())).listFiles().each{
-			if(it.isFile()) {
-				def klass = Class.forName(pack.replace("/",".")+"."+it.name.replace(".class",""))
-				if(klass && klass.getAnnotation(javax.persistence.Entity)){
-					klass.metaClass.static.methodMissing = {String name, args ->
-						klass.newInstance().methodMissing(name, args)
-					}
-				}
-			}
-		}*/
 		
 		def tempStr
 		try { tempStr = context.TEMPDIR } 
@@ -41,20 +35,50 @@ class GripesContextListener  implements ServletContextListener {
 		}
 		System.setProperty("gripes.temp", tempDir.toString())
 		
+		(new File(this.class.classLoader.getResource(pack.replace(".","/")).getFile())).listFiles().each{
+			if(it.isFile()) {
+				def klass = Class.forName(pack.replace("/",".")+"."+it.name.replace(".class",""))
+				if(klass && klass.getAnnotation(javax.persistence.Entity)){
+					GripesBaseModel.crudify(klass)
+					
+/*					if(klass.newInstance().properties.searchable) {
+ 						logger.debug "Setting up GripesSearch"
+						def builder = Class.forName("net.sf.gripes.search.builder.GripesSearchBuilder").newInstance(klass)
+						klass.newInstance().properties.searchable.setDelegate(builder)
+						klass.newInstance().properties.searchable.call()
+					}*/
+				}
+			}
+		}
+		
+		def contextHelper = context.getServerInfo().contains("Tomcat")?(new TomcatContextHelper(context)):(new JettyContextHelper(context))
+		logger.debug "ContextHelper: $contextHelper"
+		
 		// TODO need to compensate for the Catalina method of implementing these Filters
 		// TODO only use the /gripes-addons/ directory when addon is config'd with "-src"
 		def gripesConfig = new ConfigSlurper().parse(this.class.classLoader.getResource("Config.groovy").text)
+		context.setAttribute "GripesConfig", gripesConfig
+		
 		gripesConfig.addons.each {
 			def addonName = it
-			def addonConfig = this.class.classLoader.getResource("gripes/addons/${addonName}/gripes.addon")
-			if(!addonConfig){
-				addonConfig = this.class.classLoader.getResource("gripes/gripes-addons/${addonName}/gripes.addon")
+
+			def addonStartup = this.class.classLoader.getResource("gripes/addons/${addonName}/gripes.startup") ?:
+								this.class.classLoader.getResource("gripes/gripes-addons/${addonName}/gripes.startup")
+
+			if(addonStartup) {
+				logger.debug "Running addon startup script: {}", addonStartup
+				def shell = new GroovyShell(this.class.classLoader, new Binding([entityPackage: pack]))
+				shell.evaluate(addonStartup.text)
 			}
-			
+
+			def addonConfig = this.class.classLoader.getResource("gripes/addons/${addonName}/gripes.addon") ?:
+								this.class.classLoader.getResource("gripes/gripes-addons/${addonName}/gripes.addon")
+
+			logger.debug "Found addon config: {}", addonConfig
 			def addon = new ConfigSlurper().parse(addonConfig)
 			addon.filters.each {k,v ->
 				def filterConfig = v
-				def holder = context.contextHandler.servletHandler.getFilter(k)
+				def holder = contextHelper.getFilter(k)
 				logger.debug "Attaching the {} addon to the {}", addonName, k
 				if(!holder){
 					holder = new FilterHolder(
@@ -67,7 +91,7 @@ class GripesContextListener  implements ServletContextListener {
 						dispatches : FilterHolder.dispatch(filterConfig.dispatch)
 					)
 
-					context.contextHandler.servletHandler.addFilter(holder,mapping)	
+					contextHelper.addFilter(holder,mapping)	
 				}	
 				filterConfig.params.each {kk,vv ->
 					logger.debug "The {} addon is updating the {} param for the {}", addonName, kk, k
