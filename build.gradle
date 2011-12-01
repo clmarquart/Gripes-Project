@@ -1,10 +1,18 @@
-apply plugin: 'groovy'
-apply plugin: 'war'
-apply plugin: 'gripes'
+apply {
+	plugin 'groovy'
+	plugin 'war'
+ 	plugin 'gripes'
+}
 
 if(file("conf/gripes-basic.gradle").exists()) apply from: "conf/gripes-basic.gradle"
 
 buildscript {
+	versions = [
+		'gripes-web' : '0.1.7',
+		'gripes-plugin' : '0.1.7',
+		'gripersist' : '0.1.1'
+	]
+	
 	repositories {
 		mavenCentral()
 		mavenRepo urls: "http://www.gripes-project.org/libs"
@@ -14,8 +22,8 @@ buildscript {
 	}
 	
 	dependencies {
-		classpath group: 'gripes', name: 'gripes-plugin', version: '0.1.7'
-		classpath group: 'gripes', name: 'gripes-web', version: '0.1.7'
+		classpath group: 'gripes', name: 'gripes-plugin', version: versions['gripes-plugin']
+		classpath group: 'gripes', name: 'gripes-web', version: versions['gripes-web']
 		classpath group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
 		classpath group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
 	}

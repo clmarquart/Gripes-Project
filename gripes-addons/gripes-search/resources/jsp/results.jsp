@@ -1,4 +1,5 @@
 <%@ include file="/WEB-INF/jsp/includes/taglibs.jsp" %>
+
 <stripes:useActionBean id="bean" beanclass="PACKAGE.action.SearchActionBean"/>
 <stripes:layout-render name='../layout/main.jsp' pageTitle="Search: ${param['query']}">
 	<stripes:layout-component name="adminBar">
@@ -8,7 +9,10 @@
 	<stripes:layout-component name="content">
 		<c:forEach items="${bean.results}" var="result">
 			<div class='fieldRow'>
-				${result}
+				<stripes:link beanclass="${result.action}" event="view">
+					<stripes:param name="${fn:toLowerCase(result.entity.class.simpleName)}" value="${result.entity.id}" />
+					${result.entity.class} - ${result.entity.id}
+				</stripes:link>
 			</div>
 		</c:forEach>
 		<div id="searchBar">

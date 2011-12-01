@@ -1,5 +1,6 @@
-apply plugin: 'java'
-apply plugin: 'jetty'
+apply {
+	plugin 'jetty'	
+}
 
 def gripesConfig = new ConfigSlurper().parse(new File("resources/Config.groovy").text)
 gripesConfig.addons.each {
@@ -56,16 +57,15 @@ dependencies {
 	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.Beta2'
 	runtime group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
 	
-	//compile name: 'stripersist', version: '1.0.3'
 	compile name: 'stripesstuff', version: '0.1'
-		
-	compile group: 'gripes', name: 'gripersist', version: '0.1.1'
-	compile group: 'gripes', name: 'gripes-web', version: '0.1.7'
 	
 	/*
+	compile group: 'gripes', name: 'gripersist', version: versions['gripersist']
+	compile group: 'gripes', name: 'gripes-web', version: versions['gripes-web']
+	*/
+	
 	compile project(":gripersist")
 	compile project(":gripes-web")
-	*/
 	
 	//** Gripes Addons
 	compile fileTree(dir: 'addons', includes: ['**/bin/*.jar'])

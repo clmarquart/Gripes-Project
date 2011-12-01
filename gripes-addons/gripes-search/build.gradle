@@ -7,7 +7,7 @@ sourceCompatibility = 1.6
 
 group = 'gripes-addons'
 archivesBaseName = 'gripes-search'
-version = '0.1.0'
+version = '0.1.1'
 libsDirName = "bin"
 
 configurations {
@@ -41,19 +41,20 @@ dependencies {
 	compile name: 'stripesstuff', version: '0.1'
 	
 	compile group: 'gripes', name: 'gripes-plugin', version: '0.1.8'
-	
-	/*	
-	compile group: 'gripes', name: 'gripes-web', version: '0.1.4'
-	*/
+		
+	compile group: 'gripes', name: 'gripes-web', version: '0.1.7'
+	/*
 	compile project(':gripes-web')
+	*/
 	
 	//** Database
 	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'	
 	//compile name: 'stripersist', version: '1.0.3'
-	/*
+	
 	compile group: 'gripes', name: 'gripersist', version: '0.1.1'
-	*/
+	/*
 	compile project(':gripersist')
+	*/
 	
 	//** Hibernate Search
 	compile group: 'org.hibernate', name: 'hibernate-search', version: '4.0.0.CR1'
@@ -78,6 +79,13 @@ uploadArchives.doLast {
 		taskdef(name: 'ftp',
                 classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
                 classpath: configurations.ftpAntTask.asPath)
+
+		ftp(action: "mkdir",
+			server: "www.gripes-project.org", 
+			remotedir: "${ftpUploadRoot}/libs/gripes-addons/${archivesBaseName}/${version}",
+			chmod: "0755",
+			userid: ftpUploadUser,
+			password: ftpUploadPassword)
 
 		ftp(action: "put",
 			server: "www.gripes-project.org", 

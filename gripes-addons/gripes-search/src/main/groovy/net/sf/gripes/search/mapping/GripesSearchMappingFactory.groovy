@@ -18,8 +18,8 @@ public class GripesSearchMappingFactory {
 		
 		def propFile = new File(System.getProperty("gripes.temp")+"/addons/gripes-search/Config.properties")
 		def props = new Properties()
-		propFile.withInputStream { 
-		  stream -> props.load(stream) 
+		propFile.withInputStream { stream -> 
+			props.load(stream) 
 		}
 		props.keys().each { String className ->
 	        mapping.entity(Class.forName(className))

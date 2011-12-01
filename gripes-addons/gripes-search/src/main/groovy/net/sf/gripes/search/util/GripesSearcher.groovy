@@ -42,7 +42,12 @@ class GripesSearcher {
 			fullTextQuery = fullTextSession.createFullTextQuery( luceneQuery, Class.forName(className) )
 			_logger.debug "Found {}", fullTextQuery.list()
 				
-			results += fullTextQuery.list()
+			results += fullTextQuery.list().collect { ent ->
+				[
+					entity: ent,
+					action: ent.class.package.name.replace("model","action")+"."+ent.class.simpleName+"ActionBean"
+				]
+			}
 		}
 		
 		results

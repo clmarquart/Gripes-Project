@@ -17,7 +17,6 @@ repositories {
     mavenRepo urls: "http://www.gripes-project.org/libs"
     mavenRepo name: "jboss-snapshots", urls: "http://snapshots.jboss.org/maven2/"
     mavenRepo name: "jboss-public", urls: "https://repository.jboss.org/nexus/content/groups/public/"
-    //mavenRepo name: "atlassian", urls: "https://maven.atlassian.com/content/groups/public/"
 }
 
 sourceSets {
@@ -71,11 +70,6 @@ dependencies {
 	
 	testCompile 'junit:junit:4.7'
 	
-	/*
-	compile project(":gripersist")
-	compile project(":gripes-web")
-	*/
-	
 	//** For archiving
 	archives group: 'org.hsqldb', name: 'hsqldb', version: '2.0.0'	
 	
@@ -86,7 +80,7 @@ dependencies {
 	
 	archives group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	
-	archives group: 'gripes', name:'gripes-web', version: '0.1.5'
+	archives group: 'gripes', name:'gripes-web', version: '0.1.7'
 }
 
 uploadArchives {
@@ -99,6 +93,13 @@ uploadArchives.doLast {
 		taskdef(name: 'ftp',
                 classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
                 classpath: configurations.ftpAntTask.asPath)
+		
+		ftp(action: "mkdir",
+			server: "www.gripes-project.org", 
+			remotedir: "${ftpUploadRoot}/libs/gripes/gripes-plugin/${version}",
+			chmod: "0755",
+			userid: ftpUploadUser,
+			password: ftpUploadPassword)
 		
 		ftp(action: "put",
 			server: "www.gripes-project.org", 

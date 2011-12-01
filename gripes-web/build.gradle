@@ -89,6 +89,13 @@ uploadArchives.doLast {
 		taskdef(name: 'ftp',
                 classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
                 classpath: configurations.ftpAntTask.asPath)
+
+		ftp(action: "mkdir",
+			server: "www.gripes-project.org", 
+			remotedir: "${ftpUploadRoot}/libs/gripes/gripes-web/${version}",
+			chmod: "0755",
+			userid: ftpUploadUser,
+			password: ftpUploadPassword)
 		
 		ftp(action: "put",
 			server: "www.gripes-project.org", 
