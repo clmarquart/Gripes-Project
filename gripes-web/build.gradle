@@ -67,9 +67,9 @@ dependencies {
 	
 	//** Database
 	testCompile group: 'org.hsqldb', name: 'hsqldb', version: '2.0.0'
-	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.CR6'
-	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.CR6'
-	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.CR6'
+	compile group: 'org.hibernate', name: 'hibernate-core', version: versions['hibernate-core']
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: versions['hibernate-core']
+	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: versions['hibernate-core']
 	
 	//** Testing
 	testCompile group: 'junit', name: 'junit', version: '4.8.2'

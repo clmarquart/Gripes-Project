@@ -41,7 +41,14 @@ class GripesContextListener  implements ServletContextListener {
 				if(klass && klass.getAnnotation(javax.persistence.Entity)){
 					GripesBaseModel.crudify(klass)
 					
-/*					if(klass.newInstance().properties.searchable) {
+					//if (klass.newInstance().properties.mappings) {					
+					//	def builder = Class.forName("net.sf.gripes.entity.builder.GripesEntityBuilder").newInstance(klass)
+					//	klass.newInstance().properties.mappings.setDelegate(builder)
+					// 	klass.newInstance().properties.mappings.call()
+					//}
+					
+					/*					
+					if(klass.newInstance().properties.searchable) {
  						logger.debug "Setting up GripesSearch"
 						def builder = Class.forName("net.sf.gripes.search.builder.GripesSearchBuilder").newInstance(klass)
 						klass.newInstance().properties.searchable.setDelegate(builder)

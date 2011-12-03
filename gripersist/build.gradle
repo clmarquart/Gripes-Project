@@ -40,22 +40,19 @@ dependencies {
 	
 	//** Servlet
 	provided group: 'javax.servlet', name: 'servlet-api', version: '2.5'
-	/*	
-	compile group: 'org.mortbay.jetty', name: 'jetty', version: '6.1.26'
-	provided group: 'javax.servlet', name: 'jsp-api', version: '2.0'
-	*/
 
 	//** Framework
 	compile group: 'net.sourceforge.stripes', name: 'stripes', version: '1.5.6'
 	
-	//** Database	
-	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
-	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.Beta2'
-	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
+	//** Database
+	compile group: 'org.hibernate', name: 'hibernate-core', version: versions['hibernate-core']
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: versions['hibernate-core']
+	runtime group: 'org.hibernate', name: 'hibernate-c3p0', version: versions['hibernate-core']
 	
-	/*    
-	compile fileTree(dir: 'lib', includes: ['*.jar']) 
-	*/
+	provided group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
+	provided group: 'ch.qos.logback', name: 'logback-core', version: '0.9.28'
+	provided group: 'ch.qos.logback', name: 'logback-access', version: '0.9.28'
+	provided group: 'ch.qos.logback', name: 'logback-classic', version: '0.9.28'
 }
 
 

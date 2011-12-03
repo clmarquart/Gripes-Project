@@ -17,6 +17,8 @@
 				<!-- Tell Hibernate to use HSQLDB --> 
 				<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/> 
 				<property name="hibernate.connection.driver_class" value="org.hsqldb.jdbc.JDBCDriver"/> 
+			
+				<property name="debug" value="true" />
 
 				<!-- Configure the JDBC database connection --> 
 				<property name="hibernate.connection.url" value="jdbc:hsqldb:mem:gripesTest" />

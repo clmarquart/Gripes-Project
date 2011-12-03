@@ -10,7 +10,8 @@ buildscript {
 	versions = [
 		'gripes-web' : '0.1.7',
 		'gripes-plugin' : '0.1.7',
-		'gripersist' : '0.1.1'
+		'gripersist' : '0.1.1',
+		'hibernate-core' : '4.0.0.Beta2'
 	]
 	
 	repositories {
@@ -24,7 +25,7 @@ buildscript {
 	dependencies {
 		classpath group: 'gripes', name: 'gripes-plugin', version: versions['gripes-plugin']
 		classpath group: 'gripes', name: 'gripes-web', version: versions['gripes-web']
-		classpath group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
-		classpath group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
+		classpath group: 'org.hibernate', name: 'hibernate-core', version: versions['hibernate-core']
+		classpath group: 'org.hibernate', name: 'hibernate-entitymanager', version: versions['hibernate-core']
 	}
 }

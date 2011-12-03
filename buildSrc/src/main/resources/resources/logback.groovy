@@ -9,5 +9,5 @@ appender("STDOUT", ConsoleAppender) {
   }
 }
 
-logger("org.hibernate", WARN, ["STDOUT"])
+logger("org.hibernate", DEBUG, ["STDOUT"])
 root(DEBUG, ["STDOUT"])

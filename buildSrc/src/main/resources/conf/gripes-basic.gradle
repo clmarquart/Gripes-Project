@@ -53,9 +53,9 @@ dependencies {
 	//** Database
 	compile group: 'org.hsqldb', name: 'hsqldb', version: '2.0.0'
 	
-	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.0.0.Beta2'
-	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.0.0.Beta2'
-	runtime group: 'org.hibernate', name: 'hibernate-c3p0', version: '4.0.0.Beta2'
+	compile group: 'org.hibernate', name: 'hibernate-core', version: versions['hibernate-core']
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: versions['hibernate-core']
+	runtime group: 'org.hibernate', name: 'hibernate-c3p0', version: versions['hibernate-core']
 	
 	compile name: 'stripesstuff', version: '0.1'
 	

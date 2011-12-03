@@ -18,6 +18,8 @@
 			<!-- Tell Hibernate to use HSQLDB --> 
 			<property name="hibernate.dialect" value="[DBDIALECT]"/> 
 			<property name="hibernate.connection.driver_class" value="[DBDRIVER]"/> 
+			
+			<property name="debug" value="true" />
 
 			<!-- Configure the JDBC database connection --> 
 			<property name="hibernate.connection.url" value="[DBURL]" />
